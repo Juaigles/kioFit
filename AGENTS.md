@@ -19,6 +19,7 @@ Ante una duda de diseño: ¿esto hace más rápido o más lento registrar una se
 | Estado | Pinia, solo para estado de UI | 0009 |
 | UI | Nuxt UI 4 (Tailwind 4 + Reka UI) | 0010 |
 | Tests | Vitest + `fake-indexeddb`, `@nuxt/test-utils`, Playwright | 0009 |
+| DOM en tests | `happy-dom`: el entorno `nuxt` de `@nuxt/test-utils` lo necesita como DOM | — |
 | Lint | `@nuxt/eslint` | — |
 | Despliegue | Cloudflare Pages, con vista previa por PR | 0011 |
 | Gráficos | Sin elegir: se decide en la spec de peso. No instales ninguna antes | — |
