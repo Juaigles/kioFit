@@ -1,6 +1,6 @@
 # Plan: entrenamientos de fuerza
 
-- Spec: [spec.md](spec.md) (estado: borrador, pendiente de aprobación de Jota; el plan se escribe sobre el borrador y se ajusta si cambia algún escenario) · Escrito en modo plan de Claude Code · 2026-10-18
+- Spec: [spec.md](spec.md) (aprobada 2026-10-18) · Escrito en modo plan de Claude Code · 2026-10-18
 - Decisiones: ADR-0002, 0003, 0005, 0008, 0009, 0010, 0011, 0012 · Benchmark: [benchmark.md](benchmark.md)
 - Tareas: [tasks.md](tasks.md)
 
@@ -12,7 +12,7 @@ Stack ya fijado en AGENTS.md y ADR-0008 a 0011: Nuxt 4 en SPA (`ssr: false`), De
 
 Dexie, versión 1 (la crea la T02, sin migración previa):
 
-- `exercises`: `id` (UUID), `name`, `normalizedName` (índice), `measure` (`weight_reps` | `reps` | `duration`), `origin` (`catalog` | `custom`), `sourceId?`, `createdAt`, `updatedAt`.
+- `exercises`: `id` (UUID), `name`, `normalizedName` (índice), `measure` (`weight_reps` | `reps` | `duration`), `origin` (`catalog` | `custom`), `sourceId?` (índice único, `&sourceId` en Dexie; solo lo tienen los del catálogo, y los propios no chocan porque IndexedDB no indexa las claves ausentes), `createdAt`, `updatedAt`.
 - `sessions`: `id`, `type` (`strength`), `localDate` (`YYYY-MM-DD`, índice), `startedAt`, `endedAt?`, `status` (`in_progress` | `finished`, índice). Solo puede existir una `in_progress`; lo impone el repositorio (F-11).
 - `sessionExercises`: `id`, `sessionId` (índice), `exerciseId` (índice), `position`.
 - `sets`: `id`, `sessionExerciseId` (índice), `position`, `weightKg?`, `reps?`, `durationSeconds?`, `done`, `doneAt?`.
@@ -58,4 +58,3 @@ Los scripts existen desde la T01. Comandos de este módulo:
 - **Semilla:** elegir ~80 ejercicios con nombre en español y tipo de medida correcto es trabajo manual que puede desbordar su tarea; la lista se revisa antes de codificar.
 - **Esquema:** cualquier cambio posterior exige migración y test con datos de la versión 1; se detecta en unit.
 - **Offline (F-22):** el precache de `@vite-pwa/nuxt` debe incluir la semilla y los chunks de las rutas usadas; se verifica en e2e con `setOffline`.
-- **Spec en borrador:** si Jota cambia un escenario al aprobarla, el plan y `tasks.md` se actualizan en el mismo PR (AGENTS.md).
