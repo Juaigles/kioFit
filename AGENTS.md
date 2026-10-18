@@ -60,6 +60,7 @@ tests/
   e2e/                 # Playwright: un spec por criterio de aceptación de UI
 specs/<modulo>/        # spec.md -> benchmark.md (si hace falta) -> plan.md -> tasks.md
 specs/_plantillas/     # plantillas de spec, plan y tasks
+.claude/commands/      # comandos del ritual: /plan-modulo <modulo>, /tarea <modulo> <id>
 docs/adr/              # decisiones; una por archivo, numeradas
 docs/aprendizaje/      # nota de cierre de cada tarde
 .github/               # CI (llega con la primera tarea) y plantilla de PR
@@ -67,7 +68,7 @@ docs/aprendizaje/      # nota de cierre de cada tarde
 
 ## Ciclo SDD (sin saltarse pasos)
 
-Cada paso tiene una puerta: no se pasa al siguiente sin cumplirla. Plantillas en `specs/_plantillas/`.
+Cada paso tiene una puerta: no se pasa al siguiente sin cumplirla. Plantillas en `specs/_plantillas/`; los pasos 3-4 y 5-6 tienen comando (`/plan-modulo`, `/tarea`).
 
 | Paso | Artefacto | Puerta para seguir |
 | --- | --- | --- |
