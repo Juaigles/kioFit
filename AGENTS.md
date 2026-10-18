@@ -54,7 +54,8 @@ app/
   components/          # UI compartida por 2+ features
   composables/         # lógica compartida por 2+ features
   stores/              # Pinia: estado de UI (sesión en curso abierta, filtros)
-  db/                  # esquema Dexie, migraciones, repositorios, datos semilla
+  types/               # tipos de entidad e interfaces de repositorio; importables desde cualquier capa
+  db/                  # esquema Dexie, migraciones, implementaciones de repositorio, datos semilla
   utils/               # funciones puras compartidas (fechas, números)
 tests/
   unit/                # espejo de app/: dominio, repositorios (fake-indexeddb)
@@ -99,7 +100,7 @@ Reglas del ciclo:
 - **Componentes:** `<script setup lang="ts">`, props y emits tipados, `defineModel` para v-model. Usa primero un componente de Nuxt UI; uno propio solo si Nuxt UI no lo tiene.
 - **Estado de UI:** uniones discriminadas cuando varios flags excluyentes podrían combinarse mal (`{ status: 'idle' } | { status: 'editing', setId }`).
 - **Datos (ADR-0009):**
-  - Solo `app/db/` importa Dexie. El resto usa repositorios (`WorkoutRepository`…) definidos como interfaces.
+  - Solo `app/db/` importa Dexie. El resto usa repositorios (`WorkoutRepository`…) definidos como interfaces en `app/types/`, junto a los tipos de entidad.
   - Lectura reactiva con `liveQuery` envuelto en un composable; Dexie es la fuente de verdad, no Pinia.
   - IDs con `crypto.randomUUID()` generados en el cliente.
   - Peso siempre en kg (`number`); la unidad es solo de presentación.
