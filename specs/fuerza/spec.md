@@ -1,7 +1,7 @@
 # Spec: entrenamientos de fuerza
 
-- Módulo 1 del MVP (ADR-0005) · Estado: borrador para revisión · 2026-10-18
-- Benchmark previo: [benchmark.md](benchmark.md) · Decisiones: ADR-0002, 0005, 0008, 0009, 0012
+- Módulo 1 del MVP (ADR-0005) · Estado: borrador (pasa a aprobada cuando Jota fusione el PR) · 2026-10-18
+- Decisiones: ADR-0002, 0005, 0008, 0009, 0012 · Benchmark: [benchmark.md](benchmark.md)
 
 ## Qué y por qué
 
@@ -17,42 +17,175 @@ El éxito se mide así: Jota registra en kioFit todas sus sesiones de fuerza dur
 - **Serie:** valores según el tipo de medida y si está **hecha**.
 - **Sesión anterior de un ejercicio:** la sesión terminada más reciente, distinta de la actual, que contiene ese ejercicio.
 
-## Comportamiento y criterios de aceptación
+## Escenarios
 
-Cada criterio tiene al menos un test que lo nombra (AGENTS.md). "Hecho" significa que todos pasan en el CI.
+Cada escenario tiene al menos un test con su ID en el título (AGENTS.md). **unit** = Vitest sobre dominio y repositorios con fake-indexeddb; **e2e** = Playwright sobre el build estático. "Hecho" significa que todos pasan en el CI.
 
 ### Catálogo y ejercicios propios
-- **F-01** La primera vez que se abre la app, el catálogo contiene los ejercicios de la semilla, con nombre en español y tipo de medida.
-- **F-02** Al buscar, la lista se filtra mientras se escribe, sin distinguir mayúsculas ni acentos: "press banca" encuentra "Press de banca".
-- **F-03** Desde la búsqueda se puede crear un ejercicio propio con nombre (obligatorio, 1-60 caracteres, único sin distinguir mayúsculas ni acentos) y tipo de medida, y queda añadido a la sesión en el mismo paso.
-- **F-04** Un ejercicio propio se puede renombrar. Su tipo de medida no se puede cambiar si ya tiene series registradas.
-- **F-05** Un ejercicio propio solo se puede borrar si no aparece en ninguna sesión; si aparece, la opción de borrar no está disponible y se explica por qué.
-- **F-06** Los ejercicios del catálogo no se pueden editar ni borrar.
+
+**F-01 Semilla del catálogo** · unit
+- Dado que la base de datos está vacía
+- Cuando la app arranca
+- Entonces el catálogo contiene todos los ejercicios de la semilla, cada uno con nombre en español y tipo de medida
+
+**F-02 Semilla en una versión nueva** · unit
+- Dado un catálogo ya cargado y una semilla nueva que añade ejercicios y cambia el nombre de uno existente
+- Cuando la app arranca
+- Entonces se añaden los ejercicios nuevos y los existentes no cambian
+
+**F-03 Búsqueda sin mayúsculas ni acentos** · unit
+- Dado el ejercicio "Press de banca" en el catálogo
+- Cuando se busca "PRESS banca" o "press de bánca"
+- Entonces aparece en los resultados
+
+**F-04 Crear ejercicio propio y añadirlo** · e2e
+- Dada una sesión en curso y una búsqueda sin resultados
+- Cuando se crea un ejercicio propio desde la búsqueda con nombre y tipo de medida
+- Entonces el ejercicio existe en el catálogo y ya está añadido a la sesión
+
+**F-05 Nombre de ejercicio no válido** · unit
+- Dado un ejercicio llamado "Remo con barra"
+- Cuando se intenta crear o renombrar otro como "remo con bárra", con el nombre vacío o con más de 60 caracteres
+- Entonces se rechaza con un mensaje que dice por qué
+
+**F-06 Renombrar ejercicio propio** · unit
+- Dado un ejercicio propio
+- Cuando se renombra con un nombre válido
+- Entonces su nombre cambia también en las sesiones donde aparece
+
+**F-07 Tipo de medida bloqueado** · unit
+- Dado un ejercicio propio con al menos una serie registrada
+- Cuando se intenta cambiar su tipo de medida
+- Entonces se rechaza; sin series registradas, sí se permite
+
+**F-08 Borrar ejercicio propio** · unit
+- Dado un ejercicio propio que no aparece en ninguna sesión
+- Cuando se borra
+- Entonces desaparece del catálogo; si aparece en alguna sesión, se rechaza con un mensaje que lo explica
+
+**F-09 Catálogo de solo lectura** · unit
+- Dado un ejercicio del catálogo
+- Cuando se intenta renombrar, cambiar su tipo de medida o borrar
+- Entonces se rechaza
 
 ### Sesión en curso
-- **F-07** "Empezar entrenamiento" crea una sesión en curso con la fecha local de hoy y la hora de inicio. Solo puede haber una: si ya hay una en curso, el botón lleva a ella.
-- **F-08** Se pueden añadir ejercicios a la sesión, reordenarlos y quitarlos. Quitar un ejercicio con series hechas pide confirmación.
-- **F-09** Cada ejercicio de la sesión empieza con una serie vacía. Se pueden añadir y quitar series.
-- **F-10** Los campos de una serie dependen del tipo de medida: kg y reps, solo reps, o duración en `mm:ss`. Kg acepta coma o punto y hasta 2 decimales (0-999,99); reps es un entero de 1 a 999; duración, de 1 s a 59:59.
-- **F-11** El teclado numérico avanza con "Siguiente" de kg a reps y de reps a la siguiente serie.
-- **F-12** Cada serie muestra como referencia los valores de la serie con el mismo número en la sesión anterior del ejercicio (por ejemplo "80 × 8"). Si no hay sesión anterior o esa serie no existía, muestra "—".
-- **F-13** Marcar una serie como hecha con los campos vacíos copia los valores de referencia de F-12. Sin referencia y con campos vacíos, no se puede marcar.
-- **F-14** Cada cambio se guarda al momento en IndexedDB. Si se cierra la app o se recarga la página, al volver la sesión sigue en curso con todo lo registrado.
-- **F-15** Con el dispositivo sin red (modo avión), tras haber abierto la app una vez, se puede empezar, registrar y terminar una sesión.
+
+**F-10 Empezar entrenamiento** · e2e
+- Dado que no hay ninguna sesión en curso
+- Cuando se pulsa "Empezar entrenamiento"
+- Entonces se crea una sesión en curso de tipo `strength` con la fecha local de hoy y la hora de inicio
+
+**F-11 Una sola sesión en curso** · unit
+- Dada una sesión en curso
+- Cuando se intenta empezar otra
+- Entonces no se crea ninguna y se devuelve la que ya está en curso
+
+**F-12 Añadir, reordenar y quitar ejercicios** · e2e
+- Dada una sesión en curso
+- Cuando se añaden dos ejercicios y se cambia su orden
+- Entonces la sesión los muestra en el orden nuevo, cada uno con una serie vacía
+
+**F-13 Quitar un ejercicio con series hechas** · e2e
+- Dado un ejercicio de la sesión con al menos una serie hecha
+- Cuando se quita
+- Entonces se pide confirmación, y solo se quita si se confirma; sin series hechas se quita sin preguntar
+
+**F-14 Añadir y quitar series** · e2e
+- Dado un ejercicio de la sesión
+- Cuando se añade una serie y se quita otra
+- Entonces el número de series y su numeración se actualizan
+
+**F-15 Campos según el tipo de medida** · e2e
+- Dados tres ejercicios, uno de cada tipo de medida
+- Cuando se muestran sus series
+- Entonces piden kg y reps, solo reps, y duración en `mm:ss`, respectivamente
+
+**F-16 Valores válidos** · unit
+- Dado el texto que escribe el usuario
+- Cuando se convierte a valores de serie
+- Entonces "82,5" y "82.5" dan 82,5 kg; kg admite de 0 a 999,99 con hasta 2 decimales; reps, enteros de 1 a 999; duración, de 1 s a 59:59; cualquier otro valor se rechaza
+
+**F-17 Avanzar con "Siguiente"** · e2e
+- Dada una serie de peso y reps con el foco en kg
+- Cuando se pulsa "Siguiente" en el teclado
+- Entonces el foco pasa a reps, y desde reps a kg de la serie siguiente
+
+**F-18 Referencia de la sesión anterior** · unit
+- Dada una sesión anterior terminada donde la serie 2 del ejercicio fue 80 kg × 8
+- Cuando se muestra la serie 2 de ese ejercicio en la sesión actual
+- Entonces su referencia es "80 × 8"; si no hay sesión anterior con el ejercicio o esa serie no existía, la referencia es "—"
+
+**F-19 Marcar una serie vacía copia la referencia** · e2e
+- Dada una serie vacía con referencia "80 × 8"
+- Cuando se marca como hecha con un toque
+- Entonces queda hecha con 80 kg y 8 reps
+
+**F-20 Serie vacía sin referencia** · e2e
+- Dada una serie vacía cuya referencia es "—"
+- Cuando se intenta marcar como hecha
+- Entonces no se marca y se indica qué campo falta
+
+**F-21 Nada se pierde al recargar** · e2e
+- Dada una sesión en curso con series registradas
+- Cuando se recarga la página o se cierra y se vuelve a abrir la app
+- Entonces la sesión sigue en curso con todo lo registrado
+
+**F-22 Sin red** · e2e
+- Dada la app abierta una vez con red
+- Cuando el navegador pasa a modo sin conexión
+- Entonces se puede recargar, empezar, registrar y terminar una sesión
 
 ### Terminar, descartar e historial
-- **F-16** "Terminar" guarda la hora de fin y elimina las series no hechas. Si no queda ninguna serie hecha, pide descartar la sesión en lugar de terminarla.
-- **F-17** "Descartar" pide confirmación y borra la sesión en curso por completo.
-- **F-18** El historial lista las sesiones terminadas de la más reciente a la más antigua, con fecha, duración, número de ejercicios y de series hechas.
-- **F-19** El detalle de una sesión terminada muestra sus ejercicios y series, y permite corregir valores, añadir o quitar series y borrar la sesión (con confirmación).
-- **F-20** El día de una sesión es la fecha local en que empezó (`YYYY-MM-DD`), aunque termine pasada la medianoche o se consulte desde otra zona horaria.
+
+**F-23 Terminar** · unit
+- Dada una sesión en curso con series hechas y series sin hacer
+- Cuando se termina
+- Entonces se guarda la hora de fin, se eliminan las series sin hacer y los ejercicios que se quedan sin series
+
+**F-24 Terminar sin nada hecho** · e2e
+- Dada una sesión en curso sin ninguna serie hecha
+- Cuando se pulsa "Terminar"
+- Entonces se ofrece descartarla en lugar de terminarla
+
+**F-25 Descartar** · e2e
+- Dada una sesión en curso
+- Cuando se pulsa "Descartar" y se confirma
+- Entonces la sesión desaparece por completo y no sale en el historial
+
+**F-26 Historial** · e2e
+- Dadas tres sesiones terminadas en días distintos
+- Cuando se abre el historial
+- Entonces aparecen de la más reciente a la más antigua, cada una con fecha, duración, número de ejercicios y de series hechas
+
+**F-27 Corregir una sesión terminada** · e2e
+- Dada una sesión terminada
+- Cuando se abre su detalle y se cambia un valor, se añade una serie y se quita otra
+- Entonces los cambios se guardan y el historial los refleja
+
+**F-28 Borrar una sesión terminada** · e2e
+- Dado el detalle de una sesión terminada
+- Cuando se pulsa "Borrar" y se confirma
+- Entonces desaparece del historial y deja de ser la referencia de F-18
 
 ### Datos
-- **F-21** La primera vez que se guarda una sesión, la app pide almacenamiento persistente (`navigator.storage.persist()`). Si el navegador lo deniega, la app sigue funcionando.
-- **F-22** El peso se guarda en kg como número, y la duración en segundos.
+
+**F-29 Día local de la sesión** · unit
+- Dada una sesión que empieza el 2026-10-18 a las 23:30 hora local y termina a las 00:40
+- Cuando se guarda y se consulta, también con el reloj en otra zona horaria
+- Entonces su día es `2026-10-18`
+
+**F-30 Unidades guardadas** · unit
+- Dada una serie de 82,5 kg y otra de 1:30
+- Cuando se guardan
+- Entonces se almacenan como `82.5` (kg) y `90` (segundos)
+
+**F-31 Almacenamiento persistente** · unit
+- Dado que todavía no se ha pedido almacenamiento persistente
+- Cuando se guarda la primera sesión
+- Entonces se llama a `navigator.storage.persist()` una sola vez; si devuelve `false` o no existe, la app sigue funcionando
 
 ## Requisitos no funcionales
-- Pensada para móvil a una mano: objetivos táctiles de al menos 44 px, y registrar una serie con la referencia de F-12 cuesta un toque.
+- Pensada para móvil a una mano: objetivos táctiles de al menos 44 px, y registrar una serie con la referencia de F-18 cuesta un toque (F-19).
 - Sin llamadas de red (AGENTS.md). Los datos no salen del dispositivo.
 - Interfaz en español.
 
@@ -62,4 +195,4 @@ Cada criterio tiene al menos un test que lo nombra (AGENTS.md). "Hecho" signific
 - **Descartado:** red social, sincronización y cuentas.
 
 ## Preguntas abiertas
-Ninguna bloqueante. El plan decide el esquema de Dexie y qué ~80 ejercicios entran en la semilla.
+Ninguna que cambie un escenario. El plan decide el esquema de Dexie y qué ~80 ejercicios entran en la semilla (ADR-0012).

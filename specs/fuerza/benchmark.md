@@ -4,8 +4,13 @@ Paso previo a la spec, según el ADR-0007. Referencia: **Hevy** (contraste: Stro
 
 Etiquetas: **[visto]** en una fuente citada · **[inferido]** deducción sin confirmar · **[desconocido]** no averiguado.
 
-## Funcionalidad acotada
-Empezar una sesión, añadir ejercicios, registrar series y terminarla. Nada de rutinas, social ni estadísticas.
+## Preguntas de la spec que responde
+Este benchmark se hizo antes que la spec, en la Fase 0. Desde la Fase 1 el orden es al revés (AGENTS.md): la spec plantea preguntas y el benchmark solo las responde. Estas son las preguntas a las que contestó:
+1. ¿Qué campos necesita una serie para no rehacer el modelo después? (H1-H4 → F-15, F-30)
+2. ¿Qué hace que registrar sea rápido? (H5-H7 → F-17, F-18, F-19)
+3. ¿Qué pasa con la sesión si se cierra la app? (H8-H9 → F-11, F-21)
+
+Funcionalidad acotada: empezar una sesión, añadir ejercicios, registrar series y terminarla. Nada de rutinas, social ni estadísticas.
 
 ## Hallazgos
 
