@@ -1,6 +1,6 @@
 # Spec: entrenamientos de fuerza
 
-- Módulo 1 del MVP (ADR-0005) · Estado: borrador (pasa a aprobada cuando Jota fusione el PR) · 2026-10-18
+- Módulo 1 del MVP (ADR-0005) · Estado: aprobada (2026-10-18)
 - Decisiones: ADR-0002, 0005, 0008, 0009, 0012 · Benchmark: [benchmark.md](benchmark.md)
 
 ## Qué y por qué
