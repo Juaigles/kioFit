@@ -4,7 +4,7 @@ Cada tarea cabe en 60-90 min y ~300 líneas sin tests (ADR-0003). Una rama, un c
 
 | # | Tarea | Escenarios | Tests primero | Estado |
 | --- | --- | --- | --- | --- |
-| T01 | Crear el esqueleto de Nuxt 4, los scripts, el CI y los tests mínimos | — | `tests/unit/smoke.test.ts`, `tests/e2e/smoke.spec.ts` | pendiente |
+| T01 | Crear el esqueleto de Nuxt 4, los scripts, el CI y los tests mínimos | — | `tests/unit/smoke.test.ts`, `tests/e2e/smoke.spec.ts` | hecha ([#5](https://github.com/Juaigles/kioFit/pull/5)) |
 | T02 | Crear el esquema Dexie v1, los repositorios y el día local | F-29, F-31 | `tests/unit/db/sessions.test.ts`, `tests/unit/utils/to-local-date.test.ts`, `tests/unit/composables/persistent-storage.test.ts` | pendiente |
 | T03 | Parsear y validar los valores de una serie | F-16, F-30 | `tests/unit/features/workouts/domain/values.test.ts` | pendiente |
 | T04 | Cargar la semilla del catálogo y buscar sin acentos | F-01, F-02, F-03 | `tests/unit/db/seed.test.ts`, `tests/unit/utils/normalize.test.ts` | pendiente |

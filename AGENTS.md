@@ -19,6 +19,7 @@ Ante una duda de diseño: ¿esto hace más rápido o más lento registrar una se
 | Estado | Pinia, solo para estado de UI | 0009 |
 | UI | Nuxt UI 4 (Tailwind 4 + Reka UI) | 0010 |
 | Tests | Vitest + `fake-indexeddb`, `@nuxt/test-utils`, Playwright | 0009 |
+| DOM en tests | `happy-dom`: el entorno `nuxt` de `@nuxt/test-utils` lo necesita como DOM | — |
 | Lint | `@nuxt/eslint` | — |
 | Despliegue | Cloudflare Pages, con vista previa por PR | 0011 |
 | Gráficos | Sin elegir: se decide en la spec de peso. No instales ninguna antes | — |
@@ -26,7 +27,7 @@ Ante una duda de diseño: ¿esto hace más rápido o más lento registrar una se
 
 ## Comandos
 
-La primera tarea del plan de fuerza crea estos scripts en `package.json`; hasta entonces no existen.
+Scripts de `package.json` (Node 24; pnpm fijado en `packageManager`, se activa con `corepack enable pnpm`):
 
 ```bash
 pnpm install      # dependencias (respeta pnpm-lock.yaml; no uses npm ni yarn)
@@ -41,7 +42,7 @@ pnpm check        # lint + typecheck + test: lo mínimo antes de cada commit
 
 Durante una tarea ejecuta los tests de lo que tocas (`pnpm test tests/unit/features/workouts`). Antes de abrir el PR, `pnpm check` y `pnpm test:e2e` en verde. No digas que algo funciona sin haber ejecutado su test.
 
-El CI (`.github/workflows/ci.yml`) ejecuta `pnpm check`, `pnpm build` y `pnpm test:e2e` en cada PR y en `main`. Lo crea la misma primera tarea: no se fusiona un PR con el CI en rojo.
+El CI (`.github/workflows/ci.yml`) ejecuta `pnpm check`, `pnpm build` y `pnpm test:e2e` en cada PR y en `main`. No se fusiona un PR con el CI en rojo.
 
 ## Estructura
 
@@ -63,7 +64,8 @@ specs/_plantillas/     # plantillas de spec, plan y tasks
 .claude/commands/      # comandos del ritual: /plan-modulo <modulo>, /tarea <modulo> <id>
 docs/adr/              # decisiones; una por archivo, numeradas
 docs/aprendizaje/      # nota de cierre de cada tarde
-.github/               # CI (llega con la primera tarea) y plantilla de PR
+scripts/               # utilidades de desarrollo (servidor estático para los e2e)
+.github/               # CI y plantilla de PR
 ```
 
 ## Ciclo SDD (sin saltarse pasos)
