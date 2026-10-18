@@ -6,3 +6,15 @@ App de fitness personal estilo Hevy (PWA con Nuxt, local-first): entrenamientos 
 - Specs por módulo: [specs/](specs/)
 - Contexto y plan: [docs/documento-de-arranque.md](docs/documento-de-arranque.md)
 - Decisiones: [docs/fase-0-resumen.md](docs/fase-0-resumen.md) y [docs/adr/](docs/adr/)
+
+## Arrancar
+
+Necesita Node 24. La versión de pnpm va fijada en `package.json` (`packageManager`); si no tienes pnpm, actívalo con `corepack enable pnpm`.
+
+```bash
+pnpm install
+pnpm exec playwright install chromium   # solo para los e2e
+pnpm dev
+```
+
+El resto de comandos están en [AGENTS.md](AGENTS.md#comandos).

@@ -1,0 +1,33 @@
+# Dependencias
+node_modules
+
+# Nuxt
+.nuxt
+.output
+.data
+.nitro
+.cache
+dist
+
+# Tests
+playwright-report
+test-results
+blob-report
+coverage
+
+# Entorno
+.env
+.env.*
+!.env.example
+
+# Logs
+logs
+*.log
+
+# Sistema y editores
+.DS_Store
+.fleet
+.idea
+
+# Worktrees de Claude Code
+.claude/worktrees/
