@@ -15,7 +15,7 @@ Los datos de kioFit viven solo en el navegador del móvil de Jota (ADR-0002). Si
 - **Versión de formato:** un entero (`formatVersion`) que sube cada vez que cambia la forma del archivo. Es independiente de la versión del esquema de Dexie.
 - **Datos de dominio:** lo que Jota registra o crea: ejercicios (también los del catálogo, porque las sesiones apuntan a sus `id`), sesiones, ejercicios de la sesión y series. Peso diario y comidas se añaden cuando existan sus módulos.
 - **Estado del dispositivo:** lo que no es de Jota sino de esta instalación (`meta`: versión de la semilla, si ya se pidió almacenamiento persistente). No va en la copia.
-- **Restaurar:** importar una copia sustituye todos los datos de dominio actuales por los de la copia (ver pregunta abierta 1).
+- **Restaurar:** importar una copia sustituye todos los datos de dominio actuales por los de la copia. Decidido por Jota el 2026-10-18.
 
 Forma del archivo (la concreta el plan):
 
@@ -151,8 +151,9 @@ Cada módulo nuevo añade sus tablas dentro de `data` (por ejemplo `weights`, `f
 
 ## Preguntas abiertas
 
-Las responde Jota. Mientras sigan abiertas, la spec no se aprueba, porque las tres cambian escenarios.
+Las responde Jota. Mientras sigan abiertas, la spec no se aprueba, porque las dos cambian escenarios.
 
-1. **Importar: ¿sustituir o fusionar?** La spec propone sustituir (C-07, C-08): es una restauración, es simple y no tiene conflictos. Fusionar por `id` permitiría juntar dos móviles, pero obliga a decidir qué gana cuando el mismo registro difiere, que es el problema de la sincronización que el ADR-0002 aplaza.
+- ~~Importar: ¿sustituir o fusionar?~~ Resuelta (2026-10-18): sustituir (C-07, C-08). Fusionar es el problema de la sincronización que el ADR-0002 aplaza.
+
 2. **¿Recordar que hagas una copia?** La spec no lo incluye. Una copia que nunca se hace no protege nada; la opción mínima es mostrar en la pantalla de datos "Última copia: hace N días" (necesita guardar la fecha en `meta`).
 3. **¿Descargar o compartir?** La spec propone descargar el archivo (C-02). En iPhone las descargas desde una PWA instalada son incómodas y el menú de compartir del sistema (`navigator.share` con archivo) deja guardarlo en Archivos o Drive sin que la app use la red. Depende del móvil de Jota.
