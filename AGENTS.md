@@ -39,7 +39,9 @@ pnpm build        # nuxt generate -> .output/public
 pnpm check        # lint + typecheck + test: lo mínimo antes de cada commit
 ```
 
-Durante una tarea ejecuta los tests de lo que tocas (`pnpm test app/features/workouts`). Antes de abrir el PR, `pnpm check` y `pnpm test:e2e` en verde. No digas que algo funciona sin haber ejecutado su test.
+Durante una tarea ejecuta los tests de lo que tocas (`pnpm test tests/unit/features/workouts`). Antes de abrir el PR, `pnpm check` y `pnpm test:e2e` en verde. No digas que algo funciona sin haber ejecutado su test.
+
+El CI (`.github/workflows/ci.yml`) ejecuta `pnpm check`, `pnpm build` y `pnpm test:e2e` en cada PR y en `main`. Lo crea la misma primera tarea: no se fusiona un PR con el CI en rojo.
 
 ## Estructura
 
@@ -56,23 +58,40 @@ app/
 tests/
   unit/                # espejo de app/: dominio, repositorios (fake-indexeddb)
   e2e/                 # Playwright: un spec por criterio de aceptación de UI
-specs/<modulo>/        # benchmark.md -> spec.md -> plan.md -> tasks.md
+specs/<modulo>/        # spec.md -> benchmark.md (si hace falta) -> plan.md -> tasks.md
+specs/_plantillas/     # plantillas de spec, plan y tasks
 docs/adr/              # decisiones; una por archivo, numeradas
+docs/aprendizaje/      # nota de cierre de cada tarde
+.github/               # CI (llega con la primera tarea) y plantilla de PR
 ```
 
-## Flujo SDD
+## Ciclo SDD (sin saltarse pasos)
 
-1. Lee `specs/<modulo>/spec.md`, su `plan.md` y la tarea de `tasks.md` antes de tocar código.
-2. Una tarea = una rama, una sesión limpia y un commit. Si no cabe en 60-90 min o en un diff de ~300 líneas sin tests, párala y propón partirla (ADR-0003).
-3. Tests primero o a la vez. Cada criterio de aceptación (`F-01`, `P-01`…) tiene al menos un test que lo nombra en su título.
-4. Si la implementación obliga a cambiar el comportamiento, actualiza la spec en el mismo commit y dilo en el PR.
-5. Cualquier idea nueva va a la lista "Después del MVP" de la spec, no al código.
+Cada paso tiene una puerta: no se pasa al siguiente sin cumplirla. Plantillas en `specs/_plantillas/`.
+
+| Paso | Artefacto | Puerta para seguir |
+| --- | --- | --- |
+| 1. Spec | `spec.md` (qué y por qué) | Escenarios con ID y nivel de test; preguntas abiertas resueltas; Jota la marca `aprobada` |
+| 2. Investigación | `benchmark.md` | Solo si la spec tiene una pregunta concreta; responde a esa pregunta y nada más (ADR-0007) |
+| 3. Plan | `plan.md` (cómo), en modo plan | Cada escenario asignado a una tarea; esquema de datos y dependencias justificados |
+| 4. Tareas | `tasks.md` | Cada tarea cabe en 60-90 min y ~300 líneas sin tests (ADR-0003) y lista sus escenarios |
+| 5. Implementar | rama + commit por tarea | Tests de sus escenarios escritos primero y vistos en rojo, luego en verde |
+| 6. Evaluar | PR | CI en verde, revisión de Codex contra la spec y revisión de Jota |
+| 7. Cerrar | spec, `tasks.md`, nota | Spec al día con lo construido, tarea marcada, nota en `docs/aprendizaje/` |
+
+Reglas del ciclo:
+- Antes de tocar código lee `spec.md`, `plan.md` y tu tarea de `tasks.md`. Sin tarea en `tasks.md`, no hay código.
+- Cada escenario (`F-01`, `P-01`…) tiene al menos un test con su ID en el título: `it('F-13 copia la referencia al marcar una serie vacía')`.
+- Si la implementación obliga a cambiar el comportamiento, para: actualiza la spec en el mismo PR y dilo en su descripción.
+- Cualquier idea nueva va a "Después del MVP" de la spec, no al código.
+
+**Hecho** = escenarios de la tarea en verde en el CI + `pnpm check` limpio + spec y `tasks.md` al día + PR revisado.
 
 ## Convenciones
 
 - **Idioma:** código, identificadores, nombres de archivo y tablas en inglés; textos de UI, specs, ADR y commits en español.
 - **Commits:** Conventional Commits con ámbito, en español: `feat(workouts): registrar una serie`. Ramas `<tipo>/<slug>`. Nunca trabajes en `main`.
-- **PR:** uno por tarea, con enlace a la tarea y a los criterios que cubre. Se fusiona con squash.
+- **PR:** uno por tarea, con la plantilla de `.github/pull_request_template.md`. Se fusiona con squash.
 - **Codificación:** UTF-8 sin BOM y saltos LF en todos los archivos (en PowerShell, `Set-Content -Encoding utf8NoBOM`).
 - **Componentes:** `<script setup lang="ts">`, props y emits tipados, `defineModel` para v-model. Usa primero un componente de Nuxt UI; uno propio solo si Nuxt UI no lo tiene.
 - **Estado de UI:** uniones discriminadas cuando varios flags excluyentes podrían combinarse mal (`{ status: 'idle' } | { status: 'editing', setId }`).
