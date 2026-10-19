@@ -17,6 +17,15 @@ export interface Exercise {
   updatedAt: string
 }
 
+/** Entrada de `app/db/seed/exercises.json` (ADR-0012). Músculo y material no se guardan en el esquema v1. */
+export interface SeedExercise {
+  sourceId: string
+  name: string
+  measure: Measure
+  muscle: string
+  equipment: string
+}
+
 export type SessionType = 'strength'
 
 export type SessionStatus = 'in_progress' | 'finished'

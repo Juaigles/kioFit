@@ -16,7 +16,7 @@ Dexie, versión 1 (la crea la T02, sin migración previa):
 - `sessions`: `id`, `type` (`strength`), `localDate` (`YYYY-MM-DD`, índice), `startedAt`, `endedAt?`, `status` (`in_progress` | `finished`, índice). Solo puede existir una `in_progress`; lo impone el repositorio (F-11).
 - `sessionExercises`: `id`, `sessionId` (índice), `exerciseId` (índice), `position`.
 - `sets`: `id`, `sessionExerciseId` (índice), `position`, `weightKg?`, `reps?`, `durationSeconds?`, `done`, `doneAt?`.
-- `meta`: `key`, `value` (p. ej. `seedVersion`, `persistRequested`).
+- `meta`: `key`, `value` (p. ej. `persistRequested`).
 
 Peso siempre en kg (`number`); duración en segundos. Cada cambio posterior de esquema exige una versión nueva de Dexie, su migración y un test con datos de la versión anterior (ADR-0009).
 
@@ -36,7 +36,7 @@ Ninguna fuera de las fijadas en AGENTS.md. La T01 instala el stack (Nuxt 4, `@nu
 
 ## Semilla del catálogo
 
-Unos 80 ejercicios en `app/db/seed/exercises.json`, una entrada por línea para que el diff quepa en el tamaño de tarea. Cada entrada lleva `sourceId` (id de free-exercise-db), nombre en español, `measure`, músculo principal y material. `app/db/seed/README.md` cita free-exercise-db (Unlicense). La selección concreta de los ~80 es trabajo de la T04 y se revisa como cualquier otra tarea.
+Unos 80 ejercicios en `app/db/seed/exercises.json`, una entrada por línea para que el diff quepa en el tamaño de tarea. Cada entrada lleva `sourceId` (id de free-exercise-db), nombre en español, `measure`, músculo principal y material. `app/db/seed/README.md` cita free-exercise-db (Unlicense). La selección concreta de los ~80 es trabajo de la T04 y se revisa como cualquier otra tarea (quedaron 82). `ExerciseRepository.seedCatalog` corre en cada arranque, desde un plugin cliente, y añade solo los `sourceId` que faltan; no guarda `seedVersion`, porque comparar por `sourceId` cuesta una consulta y no obliga a subir un número a mano. Músculo y material quedan en el JSON para filtros futuros: el esquema v1 no los guarda.
 
 ## Estrategia de tests
 
