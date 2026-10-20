@@ -8,7 +8,7 @@ Cada tarea cabe en 60-90 min y ~300 líneas sin tests (ADR-0003). Una rama, un c
 | T02 | Crear el esquema Dexie v1, los repositorios y el día local | F-29, F-31 | `tests/unit/db/sessions.test.ts`, `tests/unit/utils/to-local-date.test.ts`, `tests/unit/composables/persistent-storage.test.ts` | hecha ([#8](https://github.com/Juaigles/kioFit/pull/8)) |
 | T03 | Parsear y validar los valores de una serie | F-16, F-30 | `tests/unit/features/workouts/domain/values.test.ts` | hecha ([#9](https://github.com/Juaigles/kioFit/pull/9)) |
 | T04 | Cargar la semilla del catálogo y buscar sin acentos | F-01, F-02, F-03 | `tests/unit/db/seed.test.ts`, `tests/unit/utils/normalize.test.ts` | hecha ([#10](https://github.com/Juaigles/kioFit/pull/10)) |
-| T05 | Aplicar las reglas de los ejercicios propios | F-05, F-06, F-07, F-08, F-09 | `tests/unit/features/workouts/domain/exercise-rules.test.ts`, `tests/unit/db/exercises.test.ts` | pendiente |
+| T05 | Aplicar las reglas de los ejercicios propios | F-05, F-06, F-07, F-08, F-09 | `tests/unit/features/workouts/domain/exercise-rules.test.ts`, `tests/unit/db/exercises.test.ts` | hecha ([#11](https://github.com/Juaigles/kioFit/pull/11)) |
 | T06 | Empezar una sesión y crear un ejercicio desde la búsqueda | F-04, F-10, F-11 | `tests/unit/db/session-start.test.ts`, `tests/e2e/workouts/start.spec.ts` | pendiente |
 | T07 | Añadir, reordenar y quitar ejercicios y series | F-12, F-13, F-14 | `tests/e2e/workouts/exercises.spec.ts`, `tests/e2e/workouts/sets.spec.ts` | pendiente |
 | T08 | Mostrar los campos según el tipo de medida y avanzar con "Siguiente" | F-15, F-17 | `tests/e2e/workouts/fields.spec.ts` | pendiente |
