@@ -15,7 +15,7 @@ Cada tarea cabe en 60-90 min y ~300 líneas sin tests (ADR-0003). Una rama, un c
 | T09 | Terminar y descartar una sesión | F-23, F-24, F-25 | `tests/unit/db/finish.test.ts`, `tests/e2e/workouts/finish.spec.ts` | hecha ([#15](https://github.com/Juaigles/kioFit/pull/15)) |
 | T10 | Mostrar la referencia de la sesión anterior y marcar series | F-18, F-19, F-20 | `tests/unit/features/workouts/domain/previous.test.ts`, `tests/e2e/workouts/reference.spec.ts` | hecha ([#16](https://github.com/Juaigles/kioFit/pull/16)) |
 | T11 | Conservar la sesión al recargar y funcionar sin red | F-21, F-22 | `tests/e2e/workouts/persistence.spec.ts`, `tests/e2e/workouts/offline.spec.ts` | hecha ([#17](https://github.com/Juaigles/kioFit/pull/17)) |
-| T12 | Mostrar el historial y corregir una sesión terminada | F-26, F-27 | `tests/e2e/workouts/history.spec.ts`, `tests/e2e/workouts/edit.spec.ts` | pendiente |
+| T12 | Mostrar el historial y corregir una sesión terminada | F-26, F-27 | `tests/e2e/workouts/history.spec.ts`, `tests/e2e/workouts/edit.spec.ts` | hecha ([#18](https://github.com/Juaigles/kioFit/pull/18)) |
 | T13 | Borrar una sesión terminada | F-28 | `tests/e2e/workouts/delete.spec.ts` | pendiente |
 
 Estados: pendiente · en curso · en revisión (enlace al PR) · hecha.
