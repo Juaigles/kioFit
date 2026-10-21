@@ -35,6 +35,15 @@ export function useActiveSession(deps: ActiveSessionDeps = defaultDeps()) {
     if (active.value) await deps.sessions.addExercise(active.value.session.id, exerciseId)
   }
 
+  /** Acciones sobre los ejercicios y series de la sesión en curso (F-12, F-13, F-14). */
+  const actions = {
+    removeExercise: (id: string) => deps.sessions.removeExercise(id),
+    moveExercise: (id: string, direction: -1 | 1) => deps.sessions.moveExercise(id, direction),
+    addSet: async (id: string) => { await deps.sessions.addSet(id) },
+    removeSet: (id: string) => deps.sessions.removeSet(id),
+    setDone: (id: string, done: boolean) => deps.sessions.setDone(id, done),
+  }
+
   /** `undefined` mientras carga; `null` si no hay sesión en curso. */
   const active = ref<ActiveSession | null | undefined>(undefined)
   const subscription = deps.sessions.watchActive().subscribe({
@@ -43,5 +52,5 @@ export function useActiveSession(deps: ActiveSessionDeps = defaultDeps()) {
   })
   onScopeDispose(() => subscription.unsubscribe())
 
-  return { active, start, addExercise }
+  return { active, start, addExercise, ...actions }
 }

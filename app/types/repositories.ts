@@ -27,6 +27,16 @@ export interface SessionRepository {
   watchActive(): Watchable<ActiveSession | undefined>
   /** Añade el ejercicio al final de la sesión con una serie vacía (F-04). */
   addExercise(sessionId: string, exerciseId: string): Promise<SessionExercise>
+  /** Quita el ejercicio con sus series y renumera los que quedan (F-13). */
+  removeExercise(sessionExerciseId: string): Promise<void>
+  /** Intercambia el ejercicio con su vecino: -1 lo sube, 1 lo baja; en los extremos no hace nada (F-12). */
+  moveExercise(sessionExerciseId: string, direction: -1 | 1): Promise<void>
+  /** Añade una serie vacía al final del ejercicio (F-14). */
+  addSet(sessionExerciseId: string): Promise<WorkoutSet>
+  /** Quita la serie y renumera las que quedan (F-14). */
+  removeSet(setId: string): Promise<void>
+  /** Marca o desmarca una serie como hecha; guarda la hora al marcar y la borra al desmarcar. */
+  setDone(setId: string, done: boolean, now?: Date): Promise<void>
 }
 
 /** Por qué se rechaza un cambio sobre un ejercicio (F-05 a F-09). */
