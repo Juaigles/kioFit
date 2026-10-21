@@ -1,0 +1,10 @@
+{
+  // Despliegue en Cloudflare (ADR-0011): solo archivos estáticos de `nuxt generate`, sin Worker.
+  "name": "kiofit",
+  "compatibility_date": "2026-10-18",
+  "assets": {
+    "directory": ".output/public",
+    // SPA (ADR-0008): cualquier ruta sin archivo arranca desde index.html y Vue Router resuelve.
+    "not_found_handling": "single-page-application"
+  }
+}
