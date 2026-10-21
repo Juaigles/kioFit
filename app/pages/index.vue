@@ -19,5 +19,14 @@
       block
       class="min-h-11"
     />
+    <UButton
+      to="/data"
+      label="Datos"
+      color="neutral"
+      variant="outline"
+      size="xl"
+      block
+      class="min-h-11"
+    />
   </UContainer>
 </template>
