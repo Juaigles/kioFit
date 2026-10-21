@@ -57,6 +57,9 @@ export interface WorkoutSet {
   doneAt?: string
 }
 
+/** Valores editables de una serie. Una clave con `undefined` borra ese valor; una clave ausente no lo toca. */
+export type SetValues = { [K in 'weightKg' | 'reps' | 'durationSeconds']?: number | undefined }
+
 export interface MetaEntry {
   key: string
   value: unknown

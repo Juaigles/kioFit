@@ -2,7 +2,7 @@ import { onScopeDispose, ref } from 'vue'
 import { metaRepository, sessionRepository } from '../../../db'
 import { usePersistentStorage } from '../../../composables/usePersistentStorage'
 import type { ActiveSession, MetaRepository, SessionRepository } from '../../../types/repositories'
-import type { Session } from '../../../types/workouts'
+import type { Session, SetValues } from '../../../types/workouts'
 
 interface ActiveSessionDeps {
   sessions: SessionRepository
@@ -42,6 +42,7 @@ export function useActiveSession(deps: ActiveSessionDeps = defaultDeps()) {
     addSet: async (id: string) => { await deps.sessions.addSet(id) },
     removeSet: (id: string) => deps.sessions.removeSet(id),
     setDone: (id: string, done: boolean) => deps.sessions.setDone(id, done),
+    setValues: (id: string, values: SetValues) => deps.sessions.setValues(id, values),
   }
 
   /** `undefined` mientras carga; `null` si no hay sesión en curso. */

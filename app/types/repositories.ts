@@ -1,4 +1,4 @@
-import type { Exercise, Measure, SeedExercise, Session, SessionExercise, WorkoutSet } from './workouts'
+import type { Exercise, Measure, SeedExercise, Session, SessionExercise, SetValues, WorkoutSet } from './workouts'
 
 /** Lectura reactiva: el repositorio vuelve a emitir cuando cambian los datos (Dexie `liveQuery`). */
 export interface Watchable<T> {
@@ -35,6 +35,8 @@ export interface SessionRepository {
   addSet(sessionExerciseId: string): Promise<WorkoutSet>
   /** Quita la serie y renumera las que quedan (F-14). */
   removeSet(setId: string): Promise<void>
+  /** Guarda los valores de la serie (kg, reps, segundos); `undefined` borra el valor (F-15, F-30). */
+  setValues(setId: string, values: SetValues): Promise<void>
   /** Marca o desmarca una serie como hecha; guarda la hora al marcar y la borra al desmarcar. */
   setDone(setId: string, done: boolean, now?: Date): Promise<void>
 }
