@@ -28,6 +28,8 @@ test('marcar una serie como hecha con un toque la deja marcada y otro toque la d
   await page.getByRole('searchbox', { name: 'Buscar ejercicio' }).fill('press de banca')
   await page.getByRole('button', { name: 'Press de banca', exact: true }).click()
 
+  await page.getByRole('textbox', { name: 'Kg serie 1' }).fill('80')
+  await page.getByRole('textbox', { name: 'Reps serie 1' }).fill('8')
   await page.getByRole('button', { name: 'Marcar serie 1 como hecha' }).click()
   await expect(page.getByRole('button', { name: 'Desmarcar serie 1' })).toBeVisible()
   await page.getByRole('button', { name: 'Desmarcar serie 1' }).click()

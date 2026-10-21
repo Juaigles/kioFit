@@ -18,6 +18,12 @@ export interface ActiveSession {
   exercises: SessionExerciseView[]
 }
 
+/** Una sesión terminada que contiene un ejercicio, con las series que hizo en ella. */
+export interface ExerciseHistoryEntry {
+  session: Session
+  sets: WorkoutSet[]
+}
+
 export interface SessionRepository {
   save(session: Session): Promise<void>
   get(id: string): Promise<Session | undefined>
@@ -41,6 +47,8 @@ export interface SessionRepository {
   setDone(setId: string, done: boolean, now?: Date): Promise<void>
   /** Termina la sesión: guarda `endedAt`, borra las series sin hacer y los ejercicios que se quedan sin series. No recalcula el día (F-23). */
   finishSession(sessionId: string, now?: Date): Promise<void>
+  /** Sesiones terminadas que contienen el ejercicio, sin orden garantizado; la referencia de F-18 sale de aquí. Una sesión borrada deja de salir. */
+  watchExerciseHistory(exerciseId: string): Watchable<ExerciseHistoryEntry[]>
   /** Borra la sesión con sus ejercicios y series, sin dejar rastro (F-25). */
   discardSession(sessionId: string): Promise<void>
 }

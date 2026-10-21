@@ -42,6 +42,11 @@ export function useActiveSession(deps: ActiveSessionDeps = defaultDeps()) {
     addSet: async (id: string) => { await deps.sessions.addSet(id) },
     removeSet: (id: string) => deps.sessions.removeSet(id),
     setDone: (id: string, done: boolean) => deps.sessions.setDone(id, done),
+    /** Marca la serie como hecha con los valores ya resueltos (F-19). */
+    completeSet: async (id: string, values: SetValues) => {
+      await deps.sessions.setValues(id, values)
+      await deps.sessions.setDone(id, true)
+    },
     setValues: (id: string, values: SetValues) => deps.sessions.setValues(id, values),
   }
 
