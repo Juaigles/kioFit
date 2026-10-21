@@ -1,6 +1,6 @@
 # Spec: copia de seguridad (exportar e importar)
 
-- Transversal a los tres módulos del MVP · Estado: borrador · Fecha: 2026-10-18
+- Transversal a los tres módulos del MVP · Estado: aprobada (2026-10-21)
 - Decisiones: ADR-0002, 0004, 0005, 0009, 0012 · Benchmark: no hace falta (ninguna pregunta lo necesita)
 
 ## Qué y por qué
