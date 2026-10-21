@@ -7,7 +7,7 @@ Cada tarea cabe en 60-90 min y ~300 líneas sin tests (ADR-0003). Una rama, un c
 | T01 | Definir el formato de la copia y validarlo | C-16, C-17, C-18, C-19, C-20 | `tests/unit/features/backup/domain/validate.test.ts` | hecha ([#23](https://github.com/Juaigles/kioFit/pull/23)) |
 | T02 | Exportar y restaurar los datos en el repositorio | C-01, C-03, C-04, C-08, C-09, C-12, C-13, C-15 | `tests/unit/db/backup.test.ts` | hecha ([#24](https://github.com/Juaigles/kioFit/pull/24)) |
 | T03 | Exportar desde la pantalla de datos y mostrar la última copia | C-02, C-05, C-06, C-07 | `tests/unit/features/backup/domain/last-backup.test.ts`, `tests/unit/features/backup/composables/backup-export.test.ts`, `tests/e2e/backup/export.spec.ts` | hecha ([#25](https://github.com/Juaigles/kioFit/pull/25)) |
-| T04 | Importar una copia con confirmación | C-10, C-11, C-14 | `tests/e2e/backup/import.spec.ts` | pendiente |
+| T04 | Importar una copia con confirmación | C-10, C-11, C-14 | `tests/e2e/backup/import.spec.ts` | en revisión |
 
 Estados: pendiente · en curso · en revisión (enlace al PR) · hecha.
 
