@@ -29,6 +29,8 @@ export function useFinishedSession(sessionId: MaybeRefOrGetter<string>, sessions
   onScopeDispose(() => subscription?.unsubscribe())
 
   const actions = {
+    /** Borra la sesión con sus ejercicios y series; deja de ser referencia (F-28). */
+    deleteSession: () => sessions.discardSession(toValue(sessionId)),
     removeExercise: (id: string) => sessions.removeExercise(id),
     moveExercise: (id: string, direction: -1 | 1) => sessions.moveExercise(id, direction),
     removeSet: (id: string) => sessions.removeSet(id),
