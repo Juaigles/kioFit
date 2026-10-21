@@ -5,7 +5,8 @@ import { useExerciseHistory } from '../composables/useExerciseHistory'
 import { previousReference } from '../domain/previous'
 import SetRow from './SetRow.vue'
 
-const props = defineProps<{ item: SessionExerciseView, isFirst: boolean, isLast: boolean }>()
+/** `before`: inicio de la sesión terminada que se corrige; la referencia sale de las anteriores a ella (F-27). */
+const props = defineProps<{ item: SessionExerciseView, isFirst: boolean, isLast: boolean, before?: string }>()
 const emit = defineEmits<{
   'move': [direction: -1 | 1]
   'remove': []
@@ -94,7 +95,7 @@ function requestRemove() {
         :key="set.id"
         :set="set"
         :measure="item.exercise.measure"
-        :reference="previousReference(history, set.position, item.exercise.measure)"
+        :reference="previousReference(history, set.position, item.exercise.measure, before)"
         @update-values="emit('update-values', set.id, $event)"
         @toggle="emit('toggle-set', set.id, !set.done)"
         @complete="emit('complete-set', set.id, $event)"

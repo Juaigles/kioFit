@@ -14,6 +14,14 @@ const lastWeek = entry('2026-06-03T10:00:00.000Z', [{ weightKg: 60, reps: 10 }, 
 const older = entry('2026-05-27T10:00:00.000Z', [{ weightKg: 50, reps: 12 }, { weightKg: 55, reps: 10 }, { weightKg: 55, reps: 9 }])
 
 describe('previousReference', () => {
+  it('F-27 al corregir una sesión terminada la referencia es la sesión anterior a ella, no ella misma', () => {
+    const current = entry('2026-06-10T10:00:00.000Z', [{ weightKg: 90, reps: 3 }])
+    const history = [older, lastWeek, current]
+    expect(previousReference(history, 0, 'weight_reps', current.session.startedAt).text).toBe('60 × 10')
+    expect(previousReference(history, 0, 'weight_reps', lastWeek.session.startedAt).text).toBe('50 × 12')
+    expect(previousReference(history, 0, 'weight_reps', older.session.startedAt)).toEqual({ text: '—', values: {} })
+  })
+
   it('F-18 la referencia de la serie 2 es "80 × 8" cuando la sesión anterior la hizo así', () => {
     const reference = previousReference([older, lastWeek], 1, 'weight_reps')
     expect(reference.text).toBe('80 × 8')
