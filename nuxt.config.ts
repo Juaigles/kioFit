@@ -35,7 +35,7 @@ export default defineNuxtConfig({
     },
   },
 
-  // Configuración mínima; el precache para funcionar sin red llega con la T10.
+  // Sin red (F-22): el service worker precachea la app, las rutas y la semilla (va dentro de los chunks JS).
   pwa: {
     registerType: 'autoUpdate',
     manifest: {
@@ -46,6 +46,15 @@ export default defineNuxtConfig({
       display: 'standalone',
       background_color: '#0f172a',
       theme_color: '#0f172a',
+      icons: [
+        { src: '/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
+        { src: '/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'maskable' },
+      ],
+    },
+    workbox: {
+      globPatterns: ['**/*.{js,css,html,svg,webmanifest,woff2}'],
+      // SPA: cualquier ruta de navegación sin conexión arranca desde la portada y Vue Router resuelve.
+      navigateFallback: '/',
     },
   },
 })
