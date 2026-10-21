@@ -39,6 +39,10 @@ export interface SessionRepository {
   setValues(setId: string, values: SetValues): Promise<void>
   /** Marca o desmarca una serie como hecha; guarda la hora al marcar y la borra al desmarcar. */
   setDone(setId: string, done: boolean, now?: Date): Promise<void>
+  /** Termina la sesión: guarda `endedAt`, borra las series sin hacer y los ejercicios que se quedan sin series. No recalcula el día (F-23). */
+  finishSession(sessionId: string, now?: Date): Promise<void>
+  /** Borra la sesión con sus ejercicios y series, sin dejar rastro (F-25). */
+  discardSession(sessionId: string): Promise<void>
 }
 
 /** Por qué se rechaza un cambio sobre un ejercicio (F-05 a F-09). */

@@ -112,6 +112,35 @@ export function createSessionRepository(db: KioFitDb): SessionRepository {
         await db.sets.put(done ? { ...rest, done, doneAt: now.toISOString() } : { ...rest, done })
       })
     },
+    finishSession(sessionId, now = new Date()) {
+      return db.transaction('rw', [db.sessions, db.sessionExercises, db.sets], async () => {
+        const session = await db.sessions.get(sessionId)
+        if (!session) return
+        const rows = await db.sessionExercises.where('sessionId').equals(sessionId).sortBy('position')
+        const kept: SessionExercise[] = []
+        for (const row of rows) {
+          const sets = await db.sets.where('sessionExerciseId').equals(row.id).sortBy('position')
+          const done = sets.filter(set => set.done)
+          await db.sets.bulkDelete(sets.filter(set => !set.done).map(set => set.id))
+          if (done.length === 0) {
+            await db.sessionExercises.delete(row.id)
+            continue
+          }
+          await renumber(db.sets, done)
+          kept.push(row)
+        }
+        await renumber(db.sessionExercises, kept)
+        await db.sessions.put({ ...session, status: 'finished', endedAt: now.toISOString() })
+      })
+    },
+    discardSession(sessionId) {
+      return db.transaction('rw', [db.sessions, db.sessionExercises, db.sets], async () => {
+        const rowIds = await db.sessionExercises.where('sessionId').equals(sessionId).primaryKeys()
+        await db.sets.where('sessionExerciseId').anyOf(rowIds).delete()
+        await db.sessionExercises.bulkDelete(rowIds)
+        await db.sessions.delete(sessionId)
+      })
+    },
   }
 }
 

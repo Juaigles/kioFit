@@ -45,6 +45,14 @@ export function useActiveSession(deps: ActiveSessionDeps = defaultDeps()) {
     setValues: (id: string, values: SetValues) => deps.sessions.setValues(id, values),
   }
 
+  /** Termina la sesión en curso (F-23) o la descarta (F-25). */
+  async function finish(): Promise<void> {
+    if (active.value) await deps.sessions.finishSession(active.value.session.id)
+  }
+  async function discard(): Promise<void> {
+    if (active.value) await deps.sessions.discardSession(active.value.session.id)
+  }
+
   /** `undefined` mientras carga; `null` si no hay sesión en curso. */
   const active = ref<ActiveSession | null | undefined>(undefined)
   const subscription = deps.sessions.watchActive().subscribe({
@@ -53,5 +61,5 @@ export function useActiveSession(deps: ActiveSessionDeps = defaultDeps()) {
   })
   onScopeDispose(() => subscription.unsubscribe())
 
-  return { active, start, addExercise, ...actions }
+  return { active, start, addExercise, finish, discard, ...actions }
 }
