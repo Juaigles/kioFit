@@ -1,6 +1,6 @@
 # Plan: experiencia de uso y sistema de diseño
 
-- Spec: [spec.md](spec.md) (borrador, pendiente de aprobación) · Redactado por Claude, a revisar por Jota · 2026-10-21
+- Spec: [spec.md](spec.md) (aprobada el 2026-10-21) · Redactado por Claude, a revisar por Jota · 2026-10-21
 - Decisiones: ADR-0009, 0010, 0014 · Referencia: [sistema de diseño](../../docs/diseno/sistema-de-diseno.md) · Tareas: [tasks.md](tasks.md)
 
 ## Enfoque

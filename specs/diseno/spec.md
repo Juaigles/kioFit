@@ -1,6 +1,6 @@
 # Spec: experiencia de uso y sistema de diseño
 
-- Estado: borrador · Fecha: 2026-10-21
+- Estado: aprobada (2026-10-21) · Fecha: 2026-10-21
 - Decisiones: ADR-0010, ADR-0014 · Benchmark: [benchmark.md](benchmark.md) · Referencia visual: [sistema de diseño](../../docs/diseno/sistema-de-diseno.md) y los mockups del artifact "kioFit: nuevo diseño"
 - Afecta a: [spec de fuerza](../fuerza/spec.md) y [spec de copia de seguridad](../copia-de-seguridad/spec.md). No cambia ninguno de sus escenarios; cambia cómo se llega a ellos y cómo se ven.
 

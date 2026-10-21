@@ -1,7 +1,7 @@
 # ADR-0014: Sistema de diseño con tokens y arquitectura de componentes en capas
 
-- Estado: propuesta
-- Fecha: 2026-10-21
+- Estado: aceptada
+- Fecha: 2026-10-21 (aprobada por Jota en tarjeta el mismo día)
 - Precisa: ADR-0010 (cómo se usa Nuxt UI)
 
 ## Contexto
