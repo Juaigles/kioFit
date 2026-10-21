@@ -17,7 +17,7 @@ Ante una duda de diseño: ¿esto hace más rápido o más lento registrar una se
 | PWA | `@vite-pwa/nuxt` | 0001 |
 | Datos | Dexie 4 sobre IndexedDB, detrás de repositorios | 0002, 0009 |
 | Estado | Pinia, solo para estado de UI | 0009 |
-| UI | Nuxt UI 4 (Tailwind 4 + Reka UI) | 0010 |
+| UI | Nuxt UI 4 (Tailwind 4 + Reka UI) con el sistema de diseño de `docs/diseno/` | 0010, 0014 |
 | Tests | Vitest + `fake-indexeddb`, `@nuxt/test-utils`, Playwright | 0009 |
 | DOM en tests | `happy-dom`: el entorno `nuxt` de `@nuxt/test-utils` lo necesita como DOM | — |
 | Lint | `@nuxt/eslint` | — |
@@ -49,9 +49,12 @@ El CI (`.github/workflows/ci.yml`) ejecuta `pnpm check`, `pnpm build` y `pnpm te
 ```
 app/
   pages/               # rutas finas: componen features, sin lógica
-  layouts/
-  features/<modulo>/   # workouts, weight, meals: componentes, composables y dominio del módulo
+  features/<modulo>/   # workouts, weight, meals: vistas, componentes, composables y dominio del módulo
+    views/             # *View.vue: contenedores que usan composables de datos y componen la pantalla
+    components/        # presentacionales: props hacia abajo, eventos hacia arriba
   components/          # UI compartida por 2+ features
+    app/               # sistema de diseño (App*): piezas sin dominio
+  layouts/             # default (con pestañas) y focus (sin pestañas)
   composables/         # lógica compartida por 2+ features
   stores/              # Pinia: estado de UI (sesión en curso abierta, filtros)
   types/               # tipos de entidad e interfaces de repositorio; importables desde cualquier capa
@@ -64,6 +67,7 @@ specs/<modulo>/        # spec.md -> benchmark.md (si hace falta) -> plan.md -> t
 specs/_plantillas/     # plantillas de spec, plan y tasks
 .claude/commands/      # comandos del ritual: /plan-modulo <modulo>, /tarea <modulo> <id>
 docs/adr/              # decisiones; una por archivo, numeradas
+docs/diseno/           # sistema de diseño: tokens, catálogo de componentes y pantallas
 docs/aprendizaje/      # nota de cierre de cada tarde
 scripts/               # utilidades de desarrollo (servidor estático para los e2e)
 .github/               # CI y plantilla de PR
@@ -98,6 +102,8 @@ Reglas del ciclo:
 - **PR:** uno por tarea, con la plantilla de `.github/pull_request_template.md`. Se fusiona con squash.
 - **Codificación:** UTF-8 sin BOM y saltos LF en todos los archivos (en PowerShell, `Set-Content -Encoding utf8NoBOM`).
 - **Componentes:** `<script setup lang="ts">`, props y emits tipados, `defineModel` para v-model. Usa primero un componente de Nuxt UI; uno propio solo si Nuxt UI no lo tiene.
+- **Sistema de diseño (ADR-0014):** antes de crear UI, mira `docs/diseno/sistema-de-diseno.md`. Usa un componente `App*` o de Nuxt UI de ese catálogo; si falta una pieza, se añade al documento en el mismo PR. Solo tokens semánticos (`bg-elevated`, `text-muted`, `bg-done-tint`), nunca colores de paleta ni hexadecimales.
+- **Capas de UI:** página → vista (`*View.vue`) → componentes de feature → `App*` → Nuxt UI. Cada capa solo importa de las de abajo; solo las vistas llaman a composables de datos.
 - **Estado de UI:** uniones discriminadas cuando varios flags excluyentes podrían combinarse mal (`{ status: 'idle' } | { status: 'editing', setId }`).
 - **Datos (ADR-0009):**
   - Solo `app/db/` importa Dexie. El resto usa repositorios (`WorkoutRepository`…) definidos como interfaces en `app/types/`, junto a los tipos de entidad.
@@ -115,6 +121,7 @@ Reglas del ciclo:
 - Carpeta `server/`, rutas de API de Nitro, SSR o `useAsyncData` contra un servidor.
 - Importar `dexie` o `app/db/*` desde componentes, páginas o stores. Solo a través de repositorios.
 - Una feature que importa de otra feature. Lo compartido sube a `components/`, `composables/` o `utils/`.
+- Colores de paleta de Tailwind (`bg-green-500`), hexadecimales o `style` con color en `app/`: lo comprueba un test (D-17).
 - Guardar datos de dominio en `localStorage`, `sessionStorage` o cookies.
 - `new Date().toISOString().slice(0, 10)` o cualquier fecha de día calculada en UTC.
 - `any`, `@ts-ignore` o `as unknown as` sin un comentario que explique por qué. `@ts-expect-error` solo en tests.
@@ -125,5 +132,6 @@ Reglas del ciclo:
 
 ## Referencias
 
+- Diseño: `docs/diseno/sistema-de-diseno.md` y `specs/diseno/`.
 - Decisiones: `docs/adr/` (las de la Fase 0, resumidas en `docs/fase-0-resumen.md`).
 - Inspiración de esta constitución: el `CLAUDE.md` de [alexanderop/workouttracker](https://github.com/alexanderop/workouttracker) (MIT).
