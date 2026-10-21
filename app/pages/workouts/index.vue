@@ -3,7 +3,7 @@ import ExerciseCard from '../../features/workouts/components/ExerciseCard.vue'
 import ExercisePicker from '../../features/workouts/components/ExercisePicker.vue'
 import { useActiveSession } from '../../features/workouts/composables/useActiveSession'
 
-const { active, start, addExercise: add, finish, discard, removeExercise, moveExercise, addSet, removeSet, setDone, setValues } = useActiveSession()
+const { active, start, addExercise: add, finish, discard, removeExercise, moveExercise, addSet, removeSet, setDone, completeSet, setValues } = useActiveSession()
 const picking = ref(false)
 
 type Ending = { status: 'idle' } | { status: 'nothing-done' } | { status: 'confirming-discard' }
@@ -48,6 +48,7 @@ async function addExercise(exerciseId: string) {
           @remove-set="removeSet"
           @update-values="setValues"
           @toggle-set="(setId, done) => setDone(setId, done)"
+          @complete-set="completeSet"
         />
       </ul>
       <ExercisePicker

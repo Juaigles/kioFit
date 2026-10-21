@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { SessionExerciseView } from '../../../types/repositories'
 import type { SetValues } from '../../../types/workouts'
+import { useExerciseHistory } from '../composables/useExerciseHistory'
+import { previousReference } from '../domain/previous'
 import SetRow from './SetRow.vue'
 
 const props = defineProps<{ item: SessionExerciseView, isFirst: boolean, isLast: boolean }>()
@@ -10,8 +12,11 @@ const emit = defineEmits<{
   'add-set': []
   'remove-set': [setId: string]
   'toggle-set': [setId: string, done: boolean]
+  'complete-set': [setId: string, values: SetValues]
   'update-values': [setId: string, values: SetValues]
 }>()
+
+const history = useExerciseHistory(props.item.exercise.id)
 
 type Mode = { status: 'idle' } | { status: 'confirming-remove' }
 const mode = ref<Mode>({ status: 'idle' })
@@ -89,8 +94,10 @@ function requestRemove() {
         :key="set.id"
         :set="set"
         :measure="item.exercise.measure"
+        :reference="previousReference(history, set.position, item.exercise.measure)"
         @update-values="emit('update-values', set.id, $event)"
         @toggle="emit('toggle-set', set.id, !set.done)"
+        @complete="emit('complete-set', set.id, $event)"
         @remove="emit('remove-set', set.id)"
       />
     </ul>

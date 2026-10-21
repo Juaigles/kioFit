@@ -133,6 +133,18 @@ export function createSessionRepository(db: KioFitDb): SessionRepository {
         await db.sessions.put({ ...session, status: 'finished', endedAt: now.toISOString() })
       })
     },
+    watchExerciseHistory(exerciseId) {
+      return liveQuery(async () => {
+        const rows = await db.sessionExercises.where('exerciseId').equals(exerciseId).toArray()
+        const entries = await Promise.all(rows.map(async (row) => {
+          const session = await db.sessions.get(row.sessionId)
+          if (session?.status !== 'finished') return []
+          const sets = await db.sets.where('sessionExerciseId').equals(row.id).sortBy('position')
+          return [{ session, sets }]
+        }))
+        return entries.flat()
+      })
+    },
     discardSession(sessionId) {
       return db.transaction('rw', [db.sessions, db.sessionExercises, db.sets], async () => {
         const rowIds = await db.sessionExercises.where('sessionId').equals(sessionId).primaryKeys()

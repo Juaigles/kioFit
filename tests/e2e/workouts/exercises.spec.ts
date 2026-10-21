@@ -38,6 +38,8 @@ test('F-13 quitar un ejercicio sin series hechas no pregunta', async ({ page }) 
 test('F-13 con series hechas pide confirmación y solo quita si se confirma', async ({ page }) => {
   await startSession(page)
   await addExercise(page, 'press de banca', 'Press de banca')
+  await page.getByRole('textbox', { name: 'Kg serie 1' }).fill('80')
+  await page.getByRole('textbox', { name: 'Reps serie 1' }).fill('8')
   await page.getByRole('button', { name: 'Marcar serie 1 como hecha' }).click()
 
   await page.getByRole('button', { name: 'Quitar Press de banca' }).click()

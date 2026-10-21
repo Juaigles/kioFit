@@ -23,6 +23,8 @@ test('F-24 terminar sin nada hecho ofrece descartar en lugar de terminar', async
 
 test('F-25 descartar y confirmar borra la sesión y vuelve a Empezar entrenamiento', async ({ page }) => {
   await startWithBench(page)
+  await page.getByRole('textbox', { name: 'Kg serie 1' }).fill('80')
+  await page.getByRole('textbox', { name: 'Reps serie 1' }).fill('8')
   await page.getByRole('button', { name: 'Marcar serie 1 como hecha' }).click()
 
   await page.getByRole('button', { name: 'Descartar entrenamiento' }).click()
@@ -41,6 +43,8 @@ test('F-25 descartar y confirmar borra la sesión y vuelve a Empezar entrenamien
 
 test('F-23 terminar con series hechas cierra la sesión y vuelve a Empezar entrenamiento', async ({ page }) => {
   await startWithBench(page)
+  await page.getByRole('textbox', { name: 'Kg serie 1' }).fill('80')
+  await page.getByRole('textbox', { name: 'Reps serie 1' }).fill('8')
   await page.getByRole('button', { name: 'Marcar serie 1 como hecha' }).click()
 
   await page.getByRole('button', { name: 'Terminar entrenamiento' }).click()
