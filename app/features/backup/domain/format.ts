@@ -1,15 +1,10 @@
-import type { Exercise, Session, SessionExercise, WorkoutSet } from '../../../types/workouts'
+import type { BackupData } from '../../../types/backup'
 import { toLocalDate } from '../../../utils/to-local-date'
 
 /** Versión del formato del archivo. Sube cada vez que cambia su forma; es independiente de la versión de Dexie. */
 export const CURRENT_FORMAT_VERSION = 1
 
-export interface BackupData {
-  exercises: Exercise[]
-  sessions: Session[]
-  sessionExercises: SessionExercise[]
-  sets: WorkoutSet[]
-}
+export type { BackupData }
 
 export interface BackupFile {
   app: 'kiofit'
