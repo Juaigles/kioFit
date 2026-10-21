@@ -44,7 +44,7 @@ test('F-04 crear un ejercicio propio desde una búsqueda sin resultados lo añad
   // Ya existe en el catálogo: al buscarlo otra vez aparece como resultado.
   await page.getByRole('button', { name: 'Añadir ejercicio' }).click()
   await page.getByRole('searchbox', { name: 'Buscar ejercicio' }).fill('zancadas bulgaras')
-  await expect(page.getByRole('button', { name: /Zancadas búlgaras con mancuerna/ })).toBeVisible()
+  await expect(page.getByRole('region', { name: 'Elegir ejercicio' }).getByRole('button', { name: /Zancadas búlgaras con mancuerna/ })).toBeVisible()
 })
 
 test('F-04 muestra el motivo si el nombre del ejercicio propio es demasiado largo', async ({ page }) => {

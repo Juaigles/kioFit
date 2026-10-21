@@ -1,4 +1,4 @@
-import { liveQuery } from 'dexie'
+import { liveQuery, type EntityTable } from 'dexie'
 import { validateExerciseName } from '../features/workouts/domain/exercise-rules'
 import type { ExerciseRepository, ExerciseRuleResult, MetaRepository, SessionRepository } from '../types/repositories'
 import type { Exercise, Session, SessionExercise, WorkoutSet } from '../types/workouts'
@@ -53,7 +53,60 @@ export function createSessionRepository(db: KioFitDb): SessionRepository {
         return row
       })
     },
+    removeExercise(sessionExerciseId) {
+      return db.transaction('rw', [db.sessionExercises, db.sets], async () => {
+        const row = await db.sessionExercises.get(sessionExerciseId)
+        if (!row) return
+        await db.sets.where('sessionExerciseId').equals(sessionExerciseId).delete()
+        await db.sessionExercises.delete(sessionExerciseId)
+        const rest = await db.sessionExercises.where('sessionId').equals(row.sessionId).sortBy('position')
+        await renumber(db.sessionExercises, rest)
+      })
+    },
+    moveExercise(sessionExerciseId, direction) {
+      return db.transaction('rw', db.sessionExercises, async () => {
+        const row = await db.sessionExercises.get(sessionExerciseId)
+        if (!row) return
+        const rows = await db.sessionExercises.where('sessionId').equals(row.sessionId).sortBy('position')
+        const from = rows.findIndex(item => item.id === sessionExerciseId)
+        const to = from + direction
+        if (to < 0 || to >= rows.length) return
+        const [moved] = rows.splice(from, 1)
+        rows.splice(to, 0, moved!)
+        await renumber(db.sessionExercises, rows)
+      })
+    },
+    addSet(sessionExerciseId) {
+      return db.transaction('rw', db.sets, async () => {
+        const position = await db.sets.where('sessionExerciseId').equals(sessionExerciseId).count()
+        const set: WorkoutSet = { id: crypto.randomUUID(), sessionExerciseId, position, done: false }
+        await db.sets.add(set)
+        return set
+      })
+    },
+    removeSet(setId) {
+      return db.transaction('rw', db.sets, async () => {
+        const set = await db.sets.get(setId)
+        if (!set) return
+        await db.sets.delete(setId)
+        const rest = await db.sets.where('sessionExerciseId').equals(set.sessionExerciseId).sortBy('position')
+        await renumber(db.sets, rest)
+      })
+    },
+    async setDone(setId, done, now = new Date()) {
+      await db.transaction('rw', db.sets, async () => {
+        const set = await db.sets.get(setId)
+        if (!set) return
+        const { doneAt: _previous, ...rest } = set
+        await db.sets.put(done ? { ...rest, done, doneAt: now.toISOString() } : { ...rest, done })
+      })
+    },
   }
+}
+
+/** Reescribe `position` como 0..n-1 en el orden recibido, solo donde cambia. */
+async function renumber(table: EntityTable<{ id: string, position: number }, 'id'>, ordered: { id: string, position: number }[]) {
+  await Promise.all(ordered.flatMap((item, position) => item.position === position ? [] : [table.update(item.id, { position })]))
 }
 
 export function createExerciseRepository(db: KioFitDb): ExerciseRepository {

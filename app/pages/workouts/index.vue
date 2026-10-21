@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import ExerciseCard from '../../features/workouts/components/ExerciseCard.vue'
 import ExercisePicker from '../../features/workouts/components/ExercisePicker.vue'
 import { useActiveSession } from '../../features/workouts/composables/useActiveSession'
 
-const { active, start, addExercise: add } = useActiveSession()
+const { active, start, addExercise: add, removeExercise, moveExercise, addSet, removeSet, setDone } = useActiveSession()
 const picking = ref(false)
 
 async function addExercise(exerciseId: string) {
@@ -19,15 +20,20 @@ async function addExercise(exerciseId: string) {
       </h1>
       <ul
         aria-label="Ejercicios de la sesión"
-        class="space-y-2"
+        class="space-y-3"
       >
-        <li
-          v-for="item in active.exercises"
+        <ExerciseCard
+          v-for="(item, index) in active.exercises"
           :key="item.id"
-          class="rounded-lg border border-default p-3"
-        >
-          {{ item.exercise.name }}
-        </li>
+          :item="item"
+          :is-first="index === 0"
+          :is-last="index === active.exercises.length - 1"
+          @move="moveExercise(item.id, $event)"
+          @remove="removeExercise(item.id)"
+          @add-set="addSet(item.id)"
+          @remove-set="removeSet"
+          @toggle-set="(setId, done) => setDone(setId, done)"
+        />
       </ul>
       <ExercisePicker
         v-if="picking"
