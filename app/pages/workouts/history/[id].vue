@@ -14,6 +14,9 @@ const sessionId = computed(() => String(route.params.id))
       variant="ghost"
       class="min-h-11"
     />
-    <SessionDetail :session-id="sessionId" />
+    <SessionDetail
+      :session-id="sessionId"
+      @deleted="navigateTo('/workouts/history')"
+    />
   </UContainer>
 </template>

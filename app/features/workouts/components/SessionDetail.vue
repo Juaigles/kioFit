@@ -4,7 +4,16 @@ import { formatSessionDate, formatSessionDuration } from '../domain/history'
 import ExerciseCard from './ExerciseCard.vue'
 
 const props = defineProps<{ sessionId: string }>()
-const { detail, removeExercise, moveExercise, addSet, removeSet, setDone, completeSet, setValues } = useFinishedSession(() => props.sessionId)
+const emit = defineEmits<{ deleted: [] }>()
+const { detail, deleteSession, removeExercise, moveExercise, addSet, removeSet, setDone, completeSet, setValues } = useFinishedSession(() => props.sessionId)
+
+type Deleting = { status: 'idle' } | { status: 'confirming' }
+const deleting = ref<Deleting>({ status: 'idle' })
+
+async function confirmDelete() {
+  await deleteSession()
+  emit('deleted')
+}
 </script>
 
 <template>
@@ -37,6 +46,37 @@ const { detail, removeExercise, moveExercise, addSet, removeSet, setDone, comple
         @complete-set="completeSet"
       />
     </ul>
+    <div
+      v-if="deleting.status === 'confirming'"
+      role="alert"
+      class="space-y-2 rounded-lg bg-error/10 p-3"
+    >
+      <p>¿Borrar el entrenamiento? Se borra por completo y no se puede deshacer.</p>
+      <div class="flex gap-2">
+        <UButton
+          label="Sí, borrar"
+          color="error"
+          class="min-h-11"
+          @click="confirmDelete"
+        />
+        <UButton
+          label="Cancelar"
+          color="neutral"
+          variant="outline"
+          class="min-h-11"
+          @click="deleting = { status: 'idle' }"
+        />
+      </div>
+    </div>
+    <UButton
+      v-else
+      label="Borrar"
+      aria-label="Borrar entrenamiento"
+      color="error"
+      variant="outline"
+      class="min-h-11"
+      @click="deleting = { status: 'confirming' }"
+    />
   </template>
   <p v-else-if="detail === null">
     No se encuentra este entrenamiento.
