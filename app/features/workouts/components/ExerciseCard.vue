@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { SessionExerciseView } from '../../../types/repositories'
+import type { SetValues } from '../../../types/workouts'
+import SetRow from './SetRow.vue'
 
 const props = defineProps<{ item: SessionExerciseView, isFirst: boolean, isLast: boolean }>()
 const emit = defineEmits<{
@@ -8,6 +10,7 @@ const emit = defineEmits<{
   'add-set': []
   'remove-set': [setId: string]
   'toggle-set': [setId: string, done: boolean]
+  'update-values': [setId: string, values: SetValues]
 }>()
 
 type Mode = { status: 'idle' } | { status: 'confirming-remove' }
@@ -81,30 +84,15 @@ function requestRemove() {
       :aria-label="`Series de ${item.exercise.name}`"
       class="space-y-1"
     >
-      <li
+      <SetRow
         v-for="set in item.sets"
         :key="set.id"
-        class="flex items-center gap-1"
-      >
-        <span class="flex-1">Serie {{ set.position + 1 }}</span>
-        <UButton
-          :label="set.done ? '✓' : '○'"
-          :color="set.done ? 'success' : 'neutral'"
-          variant="ghost"
-          class="min-h-11 min-w-11 justify-center"
-          :aria-label="set.done ? `Desmarcar serie ${set.position + 1}` : `Marcar serie ${set.position + 1} como hecha`"
-          :aria-pressed="set.done"
-          @click="emit('toggle-set', set.id, !set.done)"
-        />
-        <UButton
-          label="✕"
-          color="neutral"
-          variant="ghost"
-          class="min-h-11 min-w-11 justify-center"
-          :aria-label="`Quitar serie ${set.position + 1}`"
-          @click="emit('remove-set', set.id)"
-        />
-      </li>
+        :set="set"
+        :measure="item.exercise.measure"
+        @update-values="emit('update-values', set.id, $event)"
+        @toggle="emit('toggle-set', set.id, !set.done)"
+        @remove="emit('remove-set', set.id)"
+      />
     </ul>
     <UButton
       label="Añadir serie"

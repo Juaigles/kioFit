@@ -97,4 +97,18 @@ describe('SessionRepository: series', () => {
     expect(after).toMatchObject({ done: false })
     expect(after!.doneAt).toBeUndefined()
   })
+
+  it('guarda los valores de la serie en kg y segundos, y undefined borra el valor', async () => {
+    const { sessions, rows } = await setup(['Uno'])
+    const [set] = await db.sets.where('sessionExerciseId').equals(rows[0]!.id).toArray()
+
+    await sessions.setValues(set!.id, { weightKg: 82.5, reps: 8 })
+    await sessions.setValues(set!.id, { durationSeconds: 90 })
+    expect(await db.sets.get(set!.id)).toMatchObject({ weightKg: 82.5, reps: 8, durationSeconds: 90 })
+
+    await sessions.setValues(set!.id, { weightKg: undefined })
+    const after = await db.sets.get(set!.id)
+    expect(after).toMatchObject({ reps: 8, durationSeconds: 90 })
+    expect('weightKg' in after!).toBe(false)
+  })
 })

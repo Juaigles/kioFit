@@ -93,6 +93,17 @@ export function createSessionRepository(db: KioFitDb): SessionRepository {
         await renumber(db.sets, rest)
       })
     },
+    async setValues(setId, values) {
+      await db.transaction('rw', db.sets, async () => {
+        const set = await db.sets.get(setId)
+        if (!set) return
+        const { weightKg, reps, durationSeconds, ...rest } = set
+        const merged = { weightKg, reps, durationSeconds, ...values }
+        // Sin `undefined` explícito: un valor borrado no deja la clave en IndexedDB.
+        const next: WorkoutSet = { ...rest, ...Object.fromEntries(Object.entries(merged).filter(([, value]) => value !== undefined)) }
+        await db.sets.put(next)
+      })
+    },
     async setDone(setId, done, now = new Date()) {
       await db.transaction('rw', db.sets, async () => {
         const set = await db.sets.get(setId)
