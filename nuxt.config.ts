@@ -21,6 +21,10 @@ export default defineNuxtConfig({
 
   compatibilityDate: '2026-10-18',
 
+  // Solo estáticos (ADR-0008). Sin esto, Nitro detecta Cloudflare Workers Builds y genera una
+  // configuración de Worker con un `index.mjs` que `nuxt generate` no crea, y el despliegue falla.
+  nitro: { preset: 'static' },
+
   typescript: {
     strict: true,
     // Que `nuxt typecheck` cubra también los tests y las configs de test.
