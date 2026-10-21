@@ -1,3 +1,4 @@
+import type { BackupData } from './backup'
 import type { Exercise, Measure, SeedExercise, Session, SessionExercise, SetValues, WorkoutSet } from './workouts'
 
 /** Lectura reactiva: el repositorio vuelve a emitir cuando cambian los datos (Dexie `liveQuery`). */
@@ -98,4 +99,11 @@ export interface ExerciseRepository {
 export interface MetaRepository {
   get(key: string): Promise<unknown>
   set(key: string, value: unknown): Promise<void>
+}
+
+export interface BackupRepository {
+  /** Lee las cuatro tablas de dominio en una sola transacción de lectura; no incluye `meta`. */
+  exportData(): Promise<BackupData>
+  /** Sustituye los datos de dominio por los de la copia y completa el catálogo con la semilla, todo o nada. No toca `meta`. */
+  restore(data: BackupData): Promise<void>
 }
