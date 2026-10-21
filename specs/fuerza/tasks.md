@@ -10,7 +10,7 @@ Cada tarea cabe en 60-90 min y ~300 líneas sin tests (ADR-0003). Una rama, un c
 | T04 | Cargar la semilla del catálogo y buscar sin acentos | F-01, F-02, F-03 | `tests/unit/db/seed.test.ts`, `tests/unit/utils/normalize.test.ts` | hecha ([#10](https://github.com/Juaigles/kioFit/pull/10)) |
 | T05 | Aplicar las reglas de los ejercicios propios | F-05, F-06, F-07, F-08, F-09 | `tests/unit/features/workouts/domain/exercise-rules.test.ts`, `tests/unit/db/exercises.test.ts` | hecha ([#11](https://github.com/Juaigles/kioFit/pull/11)) |
 | T06 | Empezar una sesión y crear un ejercicio desde la búsqueda | F-04, F-10, F-11 | `tests/unit/db/session-start.test.ts`, `tests/e2e/workouts/start.spec.ts` | hecha ([#12](https://github.com/Juaigles/kioFit/pull/12)) |
-| T07 | Añadir, reordenar y quitar ejercicios y series | F-12, F-13, F-14 | `tests/e2e/workouts/exercises.spec.ts`, `tests/e2e/workouts/sets.spec.ts` | pendiente |
+| T07 | Añadir, reordenar y quitar ejercicios y series | F-12, F-13, F-14 | `tests/e2e/workouts/exercises.spec.ts`, `tests/e2e/workouts/sets.spec.ts` | hecha ([#13](https://github.com/Juaigles/kioFit/pull/13)) |
 | T08 | Mostrar los campos según el tipo de medida y avanzar con "Siguiente" | F-15, F-17 | `tests/e2e/workouts/fields.spec.ts` | pendiente |
 | T09 | Terminar y descartar una sesión | F-23, F-24, F-25 | `tests/unit/db/finish.test.ts`, `tests/e2e/workouts/finish.spec.ts` | pendiente |
 | T10 | Mostrar la referencia de la sesión anterior y marcar series | F-18, F-19, F-20 | `tests/unit/features/workouts/domain/previous.test.ts`, `tests/e2e/workouts/reference.spec.ts` | pendiente |
