@@ -30,10 +30,14 @@ function textOf(measure: Measure, values: Required<SetValues>): string {
 /**
  * La serie en esa posición de la sesión terminada más reciente que contiene el ejercicio.
  * Si esa sesión no tuvo la serie, no se mira a otra más antigua: "—".
+ * Al corregir una sesión terminada, `before` es su inicio: solo cuentan las anteriores, nunca ella misma (F-27).
  */
-export function previousReference(history: readonly ExerciseHistoryEntry[], position: number, measure: Measure): PreviousReference {
+export function previousReference(history: readonly ExerciseHistoryEntry[], position: number, measure: Measure, before?: string): PreviousReference {
   const latest = history.reduce<ExerciseHistoryEntry | undefined>(
-    (best, entry) => !best || entry.session.startedAt > best.session.startedAt ? entry : best,
+    (best, entry) => {
+      if (before !== undefined && entry.session.startedAt >= before) return best
+      return !best || entry.session.startedAt > best.session.startedAt ? entry : best
+    },
     undefined,
   )
   const set = latest?.sets.find(item => item.position === position)

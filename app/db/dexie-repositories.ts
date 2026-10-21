@@ -1,6 +1,6 @@
 import { liveQuery, type EntityTable } from 'dexie'
 import { validateExerciseName } from '../features/workouts/domain/exercise-rules'
-import type { ExerciseRepository, ExerciseRuleResult, MetaRepository, SessionRepository } from '../types/repositories'
+import type { ActiveSession, ExerciseRepository, ExerciseRuleResult, MetaRepository, SessionRepository } from '../types/repositories'
 import type { Exercise, Session, SessionExercise, WorkoutSet } from '../types/workouts'
 import { normalizeText } from '../utils/normalize'
 import { toLocalDate } from '../utils/to-local-date'
@@ -31,16 +31,24 @@ export function createSessionRepository(db: KioFitDb): SessionRepository {
     watchActive() {
       return liveQuery(async () => {
         const session = await db.sessions.where('status').equals('in_progress').first()
-        if (!session) return undefined
-        const rows = await db.sessionExercises.where('sessionId').equals(session.id).sortBy('position')
-        const exercises = await Promise.all(rows.map(async (row) => {
-          const [exercise, sets] = await Promise.all([
-            db.exercises.get(row.exerciseId),
-            db.sets.where('sessionExerciseId').equals(row.id).sortBy('position'),
-          ])
-          return exercise ? [{ id: row.id, position: row.position, exercise, sets }] : []
+        return session && loadSession(db, session)
+      })
+    },
+    watchHistory() {
+      return liveQuery(async () => {
+        const finished = await db.sessions.where('status').equals('finished').toArray()
+        finished.sort((a, b) => b.startedAt.localeCompare(a.startedAt))
+        return Promise.all(finished.map(async (session) => {
+          const rows = await db.sessionExercises.where('sessionId').equals(session.id).primaryKeys()
+          const doneSetCount = await db.sets.where('sessionExerciseId').anyOf(rows).filter(set => set.done).count()
+          return { session, exerciseCount: rows.length, doneSetCount }
         }))
-        return { session, exercises: exercises.flat() }
+      })
+    },
+    watchSession(sessionId) {
+      return liveQuery(async () => {
+        const session = await db.sessions.get(sessionId)
+        return session?.status === 'finished' ? loadSession(db, session) : undefined
       })
     },
     addExercise(sessionId, exerciseId) {
@@ -154,6 +162,19 @@ export function createSessionRepository(db: KioFitDb): SessionRepository {
       })
     },
   }
+}
+
+/** La sesión con sus ejercicios (por orden) y series; descarta los ejercicios cuya definición ya no existe. */
+async function loadSession(db: KioFitDb, session: Session): Promise<ActiveSession> {
+  const rows = await db.sessionExercises.where('sessionId').equals(session.id).sortBy('position')
+  const exercises = await Promise.all(rows.map(async (row) => {
+    const [exercise, sets] = await Promise.all([
+      db.exercises.get(row.exerciseId),
+      db.sets.where('sessionExerciseId').equals(row.id).sortBy('position'),
+    ])
+    return exercise ? [{ id: row.id, position: row.position, exercise, sets }] : []
+  }))
+  return { session, exercises: exercises.flat() }
 }
 
 /** Reescribe `position` como 0..n-1 en el orden recibido, solo donde cambia. */

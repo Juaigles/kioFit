@@ -141,6 +141,15 @@ async function addExercise(exerciseId: string) {
         class="min-h-11"
         @click="start"
       />
+      <UButton
+        to="/workouts/history"
+        label="Historial"
+        color="neutral"
+        variant="outline"
+        size="xl"
+        block
+        class="min-h-11"
+      />
     </template>
   </UContainer>
 </template>

@@ -18,6 +18,13 @@ export interface ActiveSession {
   exercises: SessionExerciseView[]
 }
 
+/** Una sesión terminada en la lista del historial, con sus totales (F-26). */
+export interface SessionSummary {
+  session: Session
+  exerciseCount: number
+  doneSetCount: number
+}
+
 /** Una sesión terminada que contiene un ejercicio, con las series que hizo en ella. */
 export interface ExerciseHistoryEntry {
   session: Session
@@ -31,6 +38,10 @@ export interface SessionRepository {
   startSession(now?: Date): Promise<Session>
   /** La sesión en curso con sus ejercicios y series, o `undefined` si no hay (F-10). */
   watchActive(): Watchable<ActiveSession | undefined>
+  /** Sesiones terminadas, de la más reciente a la más antigua, con su número de ejercicios y de series hechas (F-26). */
+  watchHistory(): Watchable<SessionSummary[]>
+  /** Una sesión terminada con sus ejercicios y series; `undefined` si no existe o sigue en curso (F-27). */
+  watchSession(sessionId: string): Watchable<ActiveSession | undefined>
   /** Añade el ejercicio al final de la sesión con una serie vacía (F-04). */
   addExercise(sessionId: string, exerciseId: string): Promise<SessionExercise>
   /** Quita el ejercicio con sus series y renumera los que quedan (F-13). */

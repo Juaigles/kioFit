@@ -10,5 +10,14 @@
       block
       class="min-h-11"
     />
+    <UButton
+      to="/workouts/history"
+      label="Historial"
+      color="neutral"
+      variant="outline"
+      size="xl"
+      block
+      class="min-h-11"
+    />
   </UContainer>
 </template>
