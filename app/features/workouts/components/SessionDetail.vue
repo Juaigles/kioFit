@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useExerciseHistories } from '../composables/useExerciseHistories'
 import { useFinishedSession } from '../composables/useSessionHistory'
 import { formatSessionDate, formatSessionDuration } from '../domain/history'
 import AppConfirmSheet from '../../../components/app/AppConfirmSheet.vue'
@@ -7,6 +8,7 @@ import ExerciseCard from './ExerciseCard.vue'
 const props = defineProps<{ sessionId: string }>()
 const emit = defineEmits<{ deleted: [] }>()
 const { detail, deleteSession, removeExercise, moveExercise, addSet, removeSet, setDone, completeSet, setValues } = useFinishedSession(() => props.sessionId)
+const histories = useExerciseHistories(() => detail.value?.exercises.map(item => item.exercise.id) ?? [])
 
 type Deleting = { status: 'idle' } | { status: 'confirming' }
 const deleting = ref<Deleting>({ status: 'idle' })
@@ -42,6 +44,7 @@ async function confirmDelete() {
         v-for="(item, index) in detail.exercises"
         :key="item.id"
         :item="item"
+        :history="histories[item.exercise.id] ?? []"
         :before="detail.session.startedAt"
         :is-first="index === 0"
         :is-last="index === detail.exercises.length - 1"

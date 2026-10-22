@@ -5,9 +5,11 @@ import { useNow } from '../../../composables/useNow'
 import ExerciseCard from '../components/ExerciseCard.vue'
 import ExercisePicker from '../components/ExercisePicker.vue'
 import { useActiveSession } from '../composables/useActiveSession'
+import { useExerciseHistories } from '../composables/useExerciseHistories'
 import { formatVolume, sessionSummary } from '../domain/summary'
 
 const { active, addExercise: add, finish, discard, removeExercise, moveExercise, addSet, removeSet, setDone, completeSet, setValues } = useActiveSession()
+const histories = useExerciseHistories(() => active.value?.exercises.map(item => item.exercise.id) ?? [])
 const picking = ref(false)
 const now = useNow()
 const summary = computed(() => active.value ? sessionSummary(active.value.session, active.value.exercises, now.value) : null)
@@ -87,6 +89,7 @@ async function addExercise(exerciseId: string) {
         v-for="(item, index) in active.exercises"
         :key="item.id"
         :item="item"
+        :history="histories[item.exercise.id] ?? []"
         :is-first="index === 0"
         :is-last="index === active.exercises.length - 1"
         @move="moveExercise(item.id, $event)"
