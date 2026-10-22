@@ -1,12 +1,18 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useNow } from '../../../composables/useNow'
 import { useActiveSession } from '../composables/useActiveSession'
+import { sessionSummary } from '../domain/summary'
+import ContinueSessionCard from '../components/ContinueSessionCard.vue'
 
 const { active, start } = useActiveSession()
+const now = useNow()
+const summary = computed(() => active.value ? sessionSummary(active.value.session, active.value.exercises, now.value) : null)
 
-/** Un toque: crea la sesión y abre su pantalla (por ahora en Entrenar; D04 la mueve a pantalla completa). */
+/** Un toque: crea la sesión y abre su pantalla (D-03). */
 async function startWorkout() {
   await start()
-  await navigateTo('/workouts')
+  await navigateTo('/workouts/session')
 }
 </script>
 
@@ -14,16 +20,16 @@ async function startWorkout() {
   <AppScreen>
     <AppPageHeader title="Hoy" />
     <template v-if="active !== undefined">
-      <UButton
-        v-if="active"
-        to="/workouts"
-        label="Continuar entrenamiento"
-        block
+      <ContinueSessionCard
+        v-if="summary"
+        :summary="summary"
       />
       <UButton
         v-else
         label="Empezar entrenamiento"
+        size="xl"
         block
+        class="min-h-11"
         @click="startWorkout"
       />
     </template>
