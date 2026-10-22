@@ -31,6 +31,8 @@ test('desde Hoy se empieza un entrenamiento con un toque', async ({ page }) => {
 test('con una sesión en curso, Hoy ofrece continuarla', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: 'Empezar entrenamiento' }).click()
+  // Se espera a que la sesión esté guardada antes de salir de la página.
+  await expect(page.getByRole('heading', { name: 'Entrenamiento en curso' })).toBeVisible()
   await page.goto('/')
 
   await expect(page.getByRole('link', { name: 'Continuar entrenamiento' })).toBeVisible()

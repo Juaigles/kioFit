@@ -28,11 +28,11 @@ test('F-28 cancelar el borrado conserva la sesión', async ({ page }) => {
   await openLatestDetail(page)
 
   await page.getByRole('button', { name: 'Borrar entrenamiento' }).click()
-  const confirm = page.getByRole('alert').filter({ hasText: '¿Borrar el entrenamiento?' })
+  const confirm = page.getByRole('dialog').filter({ hasText: '¿Borrar el entrenamiento?' })
   await expect(confirm).toBeVisible()
   await confirm.getByRole('button', { name: 'Cancelar' }).click()
 
-  await expect(confirm).toHaveCount(0)
+  await expect(confirm).toBeHidden()
   await expect(page.getByRole('heading', { name: 'Press de banca' })).toBeVisible()
   await page.goto('/workouts/history')
   await expect(page.getByRole('list', { name: 'Sesiones terminadas' }).getByRole('listitem')).toHaveCount(1)
@@ -44,7 +44,7 @@ test('F-28 borrar y confirmar la quita del historial y deja de ser la referencia
   await openLatestDetail(page)
 
   await page.getByRole('button', { name: 'Borrar entrenamiento' }).click()
-  await page.getByRole('alert').filter({ hasText: '¿Borrar el entrenamiento?' })
+  await page.getByRole('dialog').filter({ hasText: '¿Borrar el entrenamiento?' })
     .getByRole('button', { name: 'Sí, borrar' }).click()
 
   await expect(page).toHaveURL(/\/workouts\/history\/?$/)

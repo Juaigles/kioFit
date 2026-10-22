@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { SessionExerciseView } from '../../../types/repositories'
 import type { SetValues } from '../../../types/workouts'
+import AppConfirmSheet from '../../../components/app/AppConfirmSheet.vue'
 import { useExerciseHistory } from '../composables/useExerciseHistory'
 import { previousReference } from '../domain/previous'
 import SetRow from './SetRow.vue'
@@ -26,6 +27,18 @@ const mode = ref<Mode>({ status: 'idle' })
 function requestRemove() {
   if (props.item.sets.some(set => set.done)) mode.value = { status: 'confirming-remove' }
   else emit('remove')
+}
+
+const confirmingRemove = computed({
+  get: () => mode.value.status === 'confirming-remove',
+  set: (open) => {
+    if (!open) mode.value = { status: 'idle' }
+  },
+})
+
+function confirmRemove() {
+  mode.value = { status: 'idle' }
+  emit('remove')
 }
 </script>
 
@@ -63,28 +76,13 @@ function requestRemove() {
       />
     </div>
 
-    <div
-      v-if="mode.status === 'confirming-remove'"
-      role="alert"
-      class="space-y-2 rounded-lg bg-error/10 p-3"
-    >
-      <p>Tiene series hechas. ¿Quitar el ejercicio?</p>
-      <div class="flex gap-2">
-        <UButton
-          label="Sí, quitar"
-          color="error"
-          class="min-h-11"
-          @click="emit('remove')"
-        />
-        <UButton
-          label="Cancelar"
-          color="neutral"
-          variant="outline"
-          class="min-h-11"
-          @click="mode = { status: 'idle' }"
-        />
-      </div>
-    </div>
+    <AppConfirmSheet
+      v-model:open="confirmingRemove"
+      title="Quitar ejercicio"
+      description="Tiene series hechas. ¿Quitar el ejercicio?"
+      confirm-label="Sí, quitar"
+      @confirm="confirmRemove"
+    />
 
     <ul
       :aria-label="`Series de ${item.exercise.name}`"

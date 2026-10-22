@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import AppConfirmSheet from '../components/app/AppConfirmSheet.vue'
 import { useBackupExport } from '../features/backup/composables/useBackupExport'
 
 import { useBackupImport } from '../features/backup/composables/useBackupImport'
@@ -87,33 +88,17 @@ async function onFileChosen(event: Event) {
       title="Copia importada"
       description="Tus datos se han sustituido por los de la copia."
     />
-    <UModal
+    <AppConfirmSheet
       v-model:open="confirming"
       title="Importar copia"
-      :dismissible="false"
+      confirm-label="Importar"
+      @confirm="confirm"
     >
-      <template #body>
-        <p>{{ summaryText }}</p>
-        <p class="mt-2 font-medium">
-          Importar sustituye todos los datos actuales. No se puede deshacer.
-        </p>
-      </template>
-      <template #footer>
-        <UButton
-          label="Cancelar"
-          color="neutral"
-          variant="outline"
-          class="min-h-11"
-          @click="cancel"
-        />
-        <UButton
-          label="Importar"
-          color="error"
-          class="min-h-11"
-          @click="confirm"
-        />
-      </template>
-    </UModal>
+      <p>{{ summaryText }}</p>
+      <p class="mt-2 font-medium">
+        Importar sustituye todos los datos actuales. No se puede deshacer.
+      </p>
+    </AppConfirmSheet>
     <UButton
       to="/"
       label="Volver"
