@@ -47,7 +47,7 @@ test('C-02 exportar comparte kiofit-copia-<fecha>.json con la sesión terminada 
   await finishBenchSession(page)
 
   await page.goto('/')
-  await page.getByRole('link', { name: 'Datos' }).click()
+  await page.getByRole('navigation', { name: 'Principal' }).getByRole('link', { name: 'Ajustes' }).click()
   await expect(page.getByRole('heading', { name: 'Datos' })).toBeVisible()
   await expect(page.getByText('Todavía no has hecho ninguna copia')).toBeVisible()
   await page.getByRole('button', { name: 'Exportar copia' }).click()

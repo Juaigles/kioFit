@@ -15,7 +15,7 @@ for (const scheme of ['dark', 'light'] as const) {
       })
     })
     await page.goto('/')
-    await expect(page.getByRole('heading', { name: 'kioFit' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Hoy' })).toBeVisible()
 
     expect(await page.evaluate(() => (window as unknown as { __modeAtLoad: string }).__modeAtLoad)).toBe(scheme)
     const background = await page.evaluate(() => getComputedStyle(document.body).backgroundColor)

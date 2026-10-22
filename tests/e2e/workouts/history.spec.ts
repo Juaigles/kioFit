@@ -41,8 +41,9 @@ test('F-26 el historial lista las sesiones de la más reciente a la más antigua
   await expect(items.nth(2)).toContainText('1 serie')
 })
 
-test('F-26 el historial vacío lo dice y se llega desde la portada', async ({ page }) => {
+test('F-26 el historial vacío lo dice y se llega desde Entrenar', async ({ page }) => {
   await page.goto('/')
+  await page.getByRole('navigation', { name: 'Principal' }).getByRole('link', { name: 'Entrenar' }).click()
   await page.getByRole('link', { name: 'Historial' }).click()
 
   await expect(page.getByRole('heading', { name: 'Historial' })).toBeVisible()
