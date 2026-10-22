@@ -10,8 +10,8 @@ Cada tarea cabe en 60-90 min y ~300 líneas sin tests (ADR-0003). Una rama, un c
 | D04 | Sesión a pantalla completa, resumen y "Continuar" | D-03, D-04, D-05 | `tests/unit/features/workouts/domain/summary.test.ts`, `tests/e2e/workouts/session-screen.spec.ts` | hecha ([#34](https://github.com/Juaigles/kioFit/pull/34)) |
 | D05 | Tarjeta del ejercicio con menú en hoja | D-09 | `tests/e2e/workouts/exercise-menu.spec.ts` | hecha ([#36](https://github.com/Juaigles/kioFit/pull/36)) |
 | D06 | Tabla de series | D-06, D-07, D-08, D-10, D-18 | `tests/unit/features/workouts/components/set-table.test.ts`, `tests/e2e/workouts/set-table.spec.ts` | hecha ([#37](https://github.com/Juaigles/kioFit/pull/37)) |
-| D07 | Añadir ejercicio en hoja | D-12 | `tests/e2e/workouts/picker-sheet.spec.ts` | en revisión |
-| D08 | Entrenar con historial y detalle | D-13 | `tests/e2e/workouts/train-history.spec.ts` | pendiente |
+| D07 | Añadir ejercicio en hoja | D-12 | `tests/e2e/workouts/picker-sheet.spec.ts` | hecha ([#38](https://github.com/Juaigles/kioFit/pull/38)) |
+| D08 | Entrenar con historial y detalle | D-13 | `tests/e2e/workouts/train-history.spec.ts` | en revisión |
 | D09 | Ajustes y aviso de copia antigua | D-14, D-15 | `tests/unit/features/backup/domain/backup-reminder.test.ts`, `tests/e2e/backup/settings.spec.ts` | pendiente |
 
 Estados: pendiente · en curso · en revisión (enlace al PR) · hecha.
@@ -27,7 +27,7 @@ Estimación de líneas sin tests, orientativa.
 - **D05 (~200).** `ExerciseCard` rediseñado: nombre en acento, botón "Opciones de <ejercicio>" con `AppActionSheet` (Subir, Bajar, Quitar). La lectura del historial del ejercicio sube a `SessionView`. Actualiza los pasos de F-12 y F-13.
 - **D06 (~280).** `SetTable` con cabeceras según medida, `SetRow` con pista de referencia en el `placeholder`, fila hecha con `bg-done-tint`, check de 44 px, número de serie que abre "Borrar serie". Se mantiene "Siguiente" (F-17) y la lógica de F-19/F-20 tal cual. Jota prueba en el iPhone antes de fusionar. Si pasa de 300 líneas, D-10 se va a una tarea propia.
 - **D07 (~180).** `ExercisePickerSheet`: hoja con foco en la búsqueda, filas que añaden con un toque, "Crear ejercicio «texto»" al final. Reutiliza `useExerciseSearch`. Actualiza los pasos de F-04.
-- **D08 (~220).** `TrainView` con Empezar/Continuar e historial por mes en `SessionCard`; detalle con `AppPageHeader`, `AppStatTile` y opciones (Editar, Borrar) en hoja. Elimina `/workouts/history`. Actualiza los pasos de F-26 a F-28.
+- **D08 (~220).** `TrainView` con Empezar/Continuar e historial por mes en `SessionCard`; detalle con `AppPageHeader`, `AppStatTile` y una hoja de opciones con "Borrar entrenamiento" ("Editar" no hace falta: los valores ya se corrigen en el propio detalle). El resumen de cada sesión del historial incluye sus ejercicios con su número de series (`SessionSummary.exercises`), agrupado por mes. Elimina `/workouts/history`. Actualiza los pasos de F-26 a F-28.
 - **D09 (~200).** `/settings` con `SettingsView` (grupo "Copia de seguridad" con `AppListGroup`/`AppListRow`, "Acerca de"), `backupReminder` y el aviso en Hoy. Elimina `/data`. Actualiza los pasos de los e2e de copia.
 
 ## Reparto de escenarios

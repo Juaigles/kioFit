@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import type { SessionSummary } from '../../../types/repositories'
-import { formatSessionDate, formatSessionDuration } from '../domain/history'
+import { formatSessionMonth } from '../domain/history'
+import SessionCard from './SessionCard.vue'
 
-defineProps<{ sessions: SessionSummary[] }>()
+const props = defineProps<{ sessions: SessionSummary[] }>()
 
-const plural = (count: number, one: string, many: string) => `${count} ${count === 1 ? one : many}`
+/** Las sesiones llegan de la más reciente a la más antigua; cada vez que cambia el mes se pone su cabecera. */
+const rows = computed(() => props.sessions.map((summary, index) => {
+  const month = formatSessionMonth(summary.session.localDate)
+  const previous = props.sessions[index - 1]
+  return { summary, month, startsMonth: !previous || formatSessionMonth(previous.session.localDate) !== month }
+}))
 </script>
 
 <template>
@@ -12,19 +18,20 @@ const plural = (count: number, one: string, many: string) => `${count} ${count =
     aria-label="Sesiones terminadas"
     class="space-y-2"
   >
-    <li
-      v-for="{ session, exerciseCount, doneSetCount } in sessions"
-      :key="session.id"
+    <template
+      v-for="row in rows"
+      :key="row.summary.session.id"
     >
-      <NuxtLink
-        :to="`/workouts/history/${session.id}`"
-        class="block min-h-11 rounded-lg border border-default p-3"
+      <li
+        v-if="row.startsMonth"
+        role="presentation"
+        class="pt-2 text-sm font-medium text-muted first-letter:uppercase"
       >
-        <span class="block font-semibold first-letter:uppercase">{{ formatSessionDate(session.localDate) }}</span>
-        <span class="block text-sm text-muted">
-          {{ formatSessionDuration(session.startedAt, session.endedAt) }} · {{ plural(exerciseCount, 'ejercicio', 'ejercicios') }} · {{ plural(doneSetCount, 'serie', 'series') }}
-        </span>
-      </NuxtLink>
-    </li>
+        {{ row.month }}
+      </li>
+      <li>
+        <SessionCard :summary="row.summary" />
+      </li>
+    </template>
   </ul>
 </template>
