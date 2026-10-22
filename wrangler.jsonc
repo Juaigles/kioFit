@@ -6,5 +6,8 @@
     "directory": ".output/public",
     // SPA (ADR-0008): cualquier ruta sin archivo arranca desde index.html y Vue Router resuelve.
     "not_found_handling": "single-page-application"
-  }
+  },
+  // Vista previa por PR (ADR-0011): Workers Builds ejecuta `wrangler preview` en las ramas
+  // que no son main, y ese comando exige este bloque aunque esté vacío.
+  "previews": {}
 }
