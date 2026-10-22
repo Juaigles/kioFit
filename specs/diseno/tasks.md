@@ -4,8 +4,8 @@ Cada tarea cabe en 60-90 min y ~300 líneas sin tests (ADR-0003). Una rama, un c
 
 | # | Tarea | Escenarios | Tests primero | Estado |
 | --- | --- | --- | --- | --- |
-| D01 | Tokens, tema claro y oscuro, y guardarraíl de colores | D-16, D-17 | `tests/unit/design/tokens.test.ts`, `tests/e2e/navigation/color-mode.spec.ts` | en revisión |
-| D02 | Barra de pestañas, layouts y pantallas base | D-01, D-02 | `tests/unit/components/app-tab-bar.test.ts`, `tests/e2e/navigation/tabs.spec.ts` | pendiente |
+| D01 | Tokens, tema claro y oscuro, y guardarraíl de colores | D-16, D-17 | `tests/unit/design/tokens.test.ts`, `tests/e2e/navigation/color-mode.spec.ts` | hecha ([#31](https://github.com/Juaigles/kioFit/pull/31)) |
+| D02 | Barra de pestañas, layouts y pantallas base | D-01, D-02 | `tests/unit/components/app-tab-bar.test.ts`, `tests/e2e/navigation/tabs.spec.ts` | en revisión |
 | D03 | Hojas de acciones y de confirmación | D-11 | `tests/unit/components/app-sheets.test.ts`, `tests/e2e/navigation/confirm-sheet.spec.ts` | pendiente |
 | D04 | Sesión a pantalla completa, resumen y "Continuar" | D-03, D-04, D-05 | `tests/unit/features/workouts/domain/summary.test.ts`, `tests/e2e/workouts/session-screen.spec.ts` | pendiente |
 | D05 | Tarjeta del ejercicio con menú en hoja | D-09 | `tests/e2e/workouts/exercise-menu.spec.ts` | pendiente |
@@ -21,7 +21,7 @@ Estados: pendiente · en curso · en revisión (enlace al PR) · hecha.
 Estimación de líneas sin tests, orientativa.
 
 - **D01 (~150).** `main.css` con paleta, tokens `:root`/`.dark`, `@theme inline`, fuente del sistema, números tabulares y movimiento reducido; `app.config.ts`; `nuxt.config.ts` (viewport, `theme-color` por modo, modo de color del sistema). Los iconos empaquetados y `@iconify-json/lucide` pasan a D02, donde se usan por primera vez y se puede comprobar el e2e sin red. Cambiar las dos clases `bg-warning/10` y `bg-error/10` que ya existen solo si el guardarraíl las marca. El e2e sin red (F-22) debe seguir en verde.
-- **D02 (~240).** `@iconify-json/lucide` y `icon.clientBundle` en `nuxt.config.ts`; `AppScreen`, `AppPageHeader`, `AppTabBar`, `AppSection`, `AppStatTile`, layouts `default` y `focus`. Hoy pasa a `TodayView` con "Empezar entrenamiento" (la tarjeta "Continuar" llega en D04). Los botones "Historial" y "Datos" de la portada desaparecen: se llega por las pestañas.
+- **D02 (~240).** `@iconify-json/lucide` y `icon.clientBundle` en `nuxt.config.ts`; `AppScreen`, `AppPageHeader`, `AppTabBar` y el layout `default` (`<NuxtLayout>` en `app.vue`). `AppStatTile` pasa a D04 y `AppSection` a D09, y el layout `focus` a D04: se crean donde se usan por primera vez. Hoy pasa a `TodayView` con "Empezar entrenamiento" (la tarjeta "Continuar" llega en D04). Los botones "Historial" y "Datos" de la portada desaparecen: se llega por las pestañas.
 - **D03 (~180).** `AppActionSheet` y `AppConfirmSheet` sobre `UDrawer`. Se migran las cuatro confirmaciones existentes (descartar, quitar ejercicio con series hechas, borrar sesión, importar) sin cambiar sus textos. Actualiza los pasos de los e2e de F-13, F-24, F-25, F-28 y C-10 si hace falta.
 - **D04 (~250).** `sessionSummary` en el dominio, ruta `/workouts/session` con layout `focus`, `SessionView`, `SessionHeader` (Minimizar, Terminar, tres `AppStatTile`), `ContinueSessionCard` en Hoy y Entrenar. "Empezar" navega a la sesión.
 - **D05 (~200).** `ExerciseCard` rediseñado: nombre en acento, botón "Opciones de <ejercicio>" con `AppActionSheet` (Subir, Bajar, Quitar). La lectura del historial del ejercicio sube a `SessionView`. Actualiza los pasos de F-12 y F-13.

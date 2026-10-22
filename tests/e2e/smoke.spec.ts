@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-test('abre la portada', async ({ page }) => {
+test('abre Hoy', async ({ page }) => {
   await page.goto('/')
-  await expect(page.getByRole('heading', { name: 'kioFit' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Hoy' })).toBeVisible()
 })

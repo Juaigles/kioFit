@@ -47,6 +47,9 @@ export default defineNuxtConfig({
     },
   },
 
+  // Iconos de Lucide dentro del bundle: sin red no hay API de Iconify a la que pedirlos (ADR-0004, F-22).
+  icon: { clientBundle: { scan: true } },
+
   // Sin red (F-22): el service worker precachea la app, las rutas y la semilla (va dentro de los chunks JS).
   pwa: {
     registerType: 'autoUpdate',
