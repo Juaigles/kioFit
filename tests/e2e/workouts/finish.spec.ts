@@ -14,9 +14,11 @@ test('F-24 terminar sin nada hecho ofrece descartar en lugar de terminar', async
 
   await page.getByRole('button', { name: 'Terminar entrenamiento' }).click()
 
-  const notice = page.getByRole('alert').filter({ hasText: 'No hay ninguna serie hecha' })
+  const notice = page.getByRole('dialog').filter({ hasText: 'No hay ninguna serie hecha' })
   await expect(notice).toBeVisible()
   await expect(notice.getByRole('button', { name: 'Descartar' })).toBeVisible()
+  // La hoja deja el resto de la pantalla inerte: se comprueba que la sesión sigue al cerrarla.
+  await notice.getByRole('button', { name: 'Cancelar' }).click()
   await expect(page.getByRole('heading', { name: 'Entrenamiento en curso' })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Empezar entrenamiento' })).toHaveCount(0)
 })
@@ -28,7 +30,7 @@ test('F-25 descartar y confirmar borra la sesión y vuelve a Empezar entrenamien
   await page.getByRole('button', { name: 'Marcar serie 1 como hecha' }).click()
 
   await page.getByRole('button', { name: 'Descartar entrenamiento' }).click()
-  const confirm = page.getByRole('alert').filter({ hasText: '¿Descartar el entrenamiento?' })
+  const confirm = page.getByRole('dialog').filter({ hasText: '¿Descartar el entrenamiento?' })
   await expect(confirm).toBeVisible()
   await confirm.getByRole('button', { name: 'Cancelar' }).click()
   await expect(page.getByRole('heading', { name: 'Entrenamiento en curso' })).toBeVisible()

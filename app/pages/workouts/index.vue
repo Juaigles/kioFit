@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AppConfirmSheet from '../../components/app/AppConfirmSheet.vue'
 import ExerciseCard from '../../features/workouts/components/ExerciseCard.vue'
 import ExercisePicker from '../../features/workouts/components/ExercisePicker.vue'
 import { useActiveSession } from '../../features/workouts/composables/useActiveSession'
@@ -14,6 +15,13 @@ async function requestFinish() {
   if (active.value?.exercises.some(item => item.sets.some(set => set.done))) await finish()
   else ending.value = { status: 'nothing-done' }
 }
+
+const discardOpen = computed({
+  get: () => ending.value.status !== 'idle',
+  set: (open) => {
+    if (!open) ending.value = { status: 'idle' }
+  },
+})
 
 async function confirmDiscard() {
   await discard()
@@ -64,54 +72,7 @@ async function addExercise(exerciseId: string) {
         class="min-h-11"
         @click="picking = true"
       />
-      <div
-        v-if="ending.status === 'nothing-done'"
-        role="alert"
-        class="space-y-2 rounded-lg bg-warning/10 p-3"
-      >
-        <p>No hay ninguna serie hecha. ¿Descartar el entrenamiento?</p>
-        <div class="flex gap-2">
-          <UButton
-            label="Descartar"
-            color="error"
-            class="min-h-11"
-            @click="confirmDiscard"
-          />
-          <UButton
-            label="Seguir entrenando"
-            color="neutral"
-            variant="outline"
-            class="min-h-11"
-            @click="ending = { status: 'idle' }"
-          />
-        </div>
-      </div>
-      <div
-        v-else-if="ending.status === 'confirming-discard'"
-        role="alert"
-        class="space-y-2 rounded-lg bg-error/10 p-3"
-      >
-        <p>¿Descartar el entrenamiento? Se borra por completo y no se puede deshacer.</p>
-        <div class="flex gap-2">
-          <UButton
-            label="Sí, descartar"
-            color="error"
-            class="min-h-11"
-            @click="confirmDiscard"
-          />
-          <UButton
-            label="Cancelar"
-            color="neutral"
-            variant="outline"
-            class="min-h-11"
-            @click="ending = { status: 'idle' }"
-          />
-        </div>
-      </div>
-      <div
-        v-else
-        class="flex flex-col gap-2"
-      >
+      <div class="flex flex-col gap-2">
         <UButton
           label="Terminar entrenamiento"
           color="success"
@@ -129,6 +90,15 @@ async function addExercise(exerciseId: string) {
           @click="ending = { status: 'confirming-discard' }"
         />
       </div>
+      <AppConfirmSheet
+        v-model:open="discardOpen"
+        title="Descartar entrenamiento"
+        :description="ending.status === 'nothing-done'
+          ? 'No hay ninguna serie hecha. ¿Descartar el entrenamiento?'
+          : '¿Descartar el entrenamiento? Se borra por completo y no se puede deshacer.'"
+        :confirm-label="ending.status === 'nothing-done' ? 'Descartar' : 'Sí, descartar'"
+        @confirm="confirmDiscard"
+      />
     </template>
     <template v-else-if="active === null">
       <h1 class="text-2xl font-bold">
