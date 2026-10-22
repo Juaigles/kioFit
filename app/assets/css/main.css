@@ -1,2 +1,95 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
+
+/* Sistema de diseño (ADR-0014, docs/diseno/sistema-de-diseno.md).
+   Capa 1: paleta. Los componentes no la usan directamente. */
+@theme static {
+  --color-kio-50: #eef5ff;
+  --color-kio-100: #d9e8ff;
+  --color-kio-200: #bcd7ff;
+  --color-kio-300: #8ebdff;
+  --color-kio-400: #6ea8ff;
+  --color-kio-500: #3f8bf5;
+  --color-kio-600: #1f6feb;
+  --color-kio-700: #1a5fd0;
+  --color-kio-800: #1c4da6;
+  --color-kio-900: #1c4284;
+  --color-kio-950: #162a52;
+
+  /* Fuente del sistema: San Francisco en el iPhone, sin descargas. */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Capa 2: tokens semánticos. Modo claro. Las `--ui-*` son las de Nuxt UI; las `--kf-*`, las nuestras. */
+:root {
+  --ui-bg: #f2f3f5;
+  --ui-bg-muted: #f2f3f5;
+  --ui-bg-elevated: #ffffff;
+  --ui-bg-accented: #ebedf0;
+  --ui-border: #dadee3;
+  --ui-text: #0e1116;
+  --ui-text-muted: #586271;
+  --ui-text-dimmed: #586271;
+  --ui-primary: var(--color-kio-600);
+  --ui-error: #c62828;
+  --ui-warning: #b45309;
+  --kf-primary-text: #1a5fd0;
+  --kf-done: #16a34a;
+  --kf-done-tint: rgb(22 163 74 / 14%);
+  --kf-warning-tint: rgb(245 165 36 / 16%);
+  --kf-motion-press: 120ms;
+  --kf-motion-check: 200ms;
+  --kf-motion-sheet: 280ms;
+  --kf-ease-sheet: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Modo oscuro: las superficies suben de tono en vez de llevar sombra. */
+.dark {
+  --ui-bg: #0b0d10;
+  --ui-bg-muted: #0b0d10;
+  --ui-bg-elevated: #16191e;
+  --ui-bg-accented: #22262d;
+  --ui-border: #2b3038;
+  --ui-text: #f2f4f7;
+  --ui-text-muted: #9ba4af;
+  --ui-text-dimmed: #9ba4af;
+  --ui-primary: var(--color-kio-600);
+  --ui-error: #ff6b6b;
+  --ui-warning: #f5a524;
+  --kf-primary-text: #6ea8ff;
+  --kf-done: #16a34a;
+  --kf-done-tint: rgb(22 163 74 / 18%);
+  --kf-warning-tint: rgb(245 165 36 / 14%);
+}
+
+/* Expone los tokens propios como utilidades: bg-done-tint, text-primary-text… */
+@theme inline {
+  --color-done: var(--kf-done);
+  --color-done-tint: var(--kf-done-tint);
+  --color-warning-tint: var(--kf-warning-tint);
+  --color-primary-text: var(--kf-primary-text);
+}
+
+html {
+  font-variant-numeric: tabular-nums;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--ui-bg);
+  color: var(--ui-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --kf-motion-press: 120ms;
+    --kf-motion-check: 120ms;
+    --kf-motion-sheet: 120ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+}

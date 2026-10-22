@@ -29,7 +29,7 @@ Reglas (se copian a `AGENTS.md`):
 
 - `app/assets/css/main.css`: `@theme static` con la paleta `kio-50…950`; `:root` y `.dark` con las `--ui-*` (fondos, texto, borde, radio) y las `--kf-*` propias; `@theme inline` para exponer `--kf-*` como utilidades (`bg-done-tint`, `text-primary-text`); `font-family` del sistema; `font-variant-numeric: tabular-nums` en la raíz; reglas de `prefers-reduced-motion`.
 - `app/app.config.ts` (nuevo): `ui.colors = { primary: 'kio', neutral: 'zinc', … }` y variantes por defecto (`UButton` tamaño `xl`, radio `md`; `UInput` `xl`).
-- `nuxt.config.ts`: `viewport-fit=cover` en el `<meta viewport>`, dos `<meta name="theme-color">` con `media`, `colorMode.preference: 'system'`, iconos empaquetados en el cliente (`icon.clientBundle.scan`) y, si Nuxt UI intenta descargar fuentes, desactivarlo. **[a verificar en D01: nombres exactos de estas opciones en Nuxt UI 4.12]**
+- `nuxt.config.ts`: `viewport-fit=cover` en el `<meta viewport>`, dos `<meta name="theme-color">` con `media`, `colorMode.preference: 'system'`, y, en D02, iconos empaquetados en el cliente (`icon.clientBundle`). **[a verificar en D01: nombres exactos de estas opciones en Nuxt UI 4.12]**
 - Guardarraíl (D-17): `tests/unit/design/tokens.test.ts` recorre `app/**/*.vue` con una expresión regular y falla con clases de paleta (`(bg|text|border|ring|fill|stroke)-(red|green|blue|…)-\d{2,3}`), hexadecimales o `style` con `color`. Es más barato que una regla de ESLint propia y se ve en rojo igual.
 
 ## Componentes y composables
@@ -53,7 +53,7 @@ Reglas (se copian a `AGENTS.md`):
 
 ## Dependencias nuevas
 
-- `@iconify-json/lucide` (desarrollo): los iconos se empaquetan en el build para que funcionen sin red (ADR-0004, F-22). Sin ella, `@nuxt/icon` los pediría a la API de Iconify en tiempo de ejecución **[inferido; se comprueba en D01 con el e2e sin red]**.
+- `@iconify-json/lucide` (desarrollo): los iconos se empaquetan en el build para que funcionen sin red (ADR-0004, F-22). Sin ella, `@nuxt/icon` los pediría a la API de Iconify en tiempo de ejecución **[inferido; se comprueba en D02 con el e2e sin red]**.
 - Ninguna más. Hojas, modo de color e iconos ya vienen con Nuxt UI.
 
 ## Estrategia de tests
