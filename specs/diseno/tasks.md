@@ -9,8 +9,8 @@ Cada tarea cabe en 60-90 min y ~300 líneas sin tests (ADR-0003). Una rama, un c
 | D03 | Hojas de acciones y de confirmación | D-11 | `tests/unit/components/app-sheets.test.ts`, `tests/e2e/navigation/confirm-sheet.spec.ts` | hecha ([#33](https://github.com/Juaigles/kioFit/pull/33)) |
 | D04 | Sesión a pantalla completa, resumen y "Continuar" | D-03, D-04, D-05 | `tests/unit/features/workouts/domain/summary.test.ts`, `tests/e2e/workouts/session-screen.spec.ts` | hecha ([#34](https://github.com/Juaigles/kioFit/pull/34)) |
 | D05 | Tarjeta del ejercicio con menú en hoja | D-09 | `tests/e2e/workouts/exercise-menu.spec.ts` | hecha ([#36](https://github.com/Juaigles/kioFit/pull/36)) |
-| D06 | Tabla de series | D-06, D-07, D-08, D-10, D-18 | `tests/unit/features/workouts/components/set-table.test.ts`, `tests/e2e/workouts/set-table.spec.ts` | en revisión |
-| D07 | Añadir ejercicio en hoja | D-12 | `tests/e2e/workouts/picker-sheet.spec.ts` | pendiente |
+| D06 | Tabla de series | D-06, D-07, D-08, D-10, D-18 | `tests/unit/features/workouts/components/set-table.test.ts`, `tests/e2e/workouts/set-table.spec.ts` | hecha ([#37](https://github.com/Juaigles/kioFit/pull/37)) |
+| D07 | Añadir ejercicio en hoja | D-12 | `tests/e2e/workouts/picker-sheet.spec.ts` | en revisión |
 | D08 | Entrenar con historial y detalle | D-13 | `tests/e2e/workouts/train-history.spec.ts` | pendiente |
 | D09 | Ajustes y aviso de copia antigua | D-14, D-15 | `tests/unit/features/backup/domain/backup-reminder.test.ts`, `tests/e2e/backup/settings.spec.ts` | pendiente |
 
