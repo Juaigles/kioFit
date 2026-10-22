@@ -13,11 +13,19 @@ export default defineNuxtConfig({
     head: {
       htmlAttrs: { lang: 'es' },
       title: 'kioFit',
-      meta: [{ name: 'theme-color', content: '#0f172a' }],
+      // `viewport-fit=cover` deja que la app use toda la pantalla; las zonas seguras se respetan con `env(safe-area-inset-*)`.
+      viewport: 'width=device-width, initial-scale=1, viewport-fit=cover',
+      meta: [
+        { name: 'theme-color', content: '#0b0d10', media: '(prefers-color-scheme: dark)' },
+        { name: 'theme-color', content: '#f2f3f5', media: '(prefers-color-scheme: light)' },
+      ],
     },
   },
 
   css: ['~/assets/css/main.css'],
+
+  // El modo sigue al sistema (ADR-0014).
+  colorMode: { preference: 'system', fallback: 'dark' },
 
   compatibilityDate: '2026-10-18',
 
@@ -48,8 +56,8 @@ export default defineNuxtConfig({
       description: 'Entrenamientos de fuerza, peso y comidas, sin conexión.',
       lang: 'es',
       display: 'standalone',
-      background_color: '#0f172a',
-      theme_color: '#0f172a',
+      background_color: '#0b0d10',
+      theme_color: '#0b0d10',
       icons: [
         { src: '/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
         { src: '/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'maskable' },
