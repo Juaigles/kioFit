@@ -15,3 +15,11 @@ export function formatSessionDuration(startedAt: string, endedAt: string | undef
   if (minutes < 60) return `${minutes} min`
   return `${Math.floor(minutes / 60)} h ${String(minutes % 60).padStart(2, '0')} min`
 }
+
+const MONTH_FORMAT = new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' })
+
+/** "junio de 2026" a partir del día local `YYYY-MM-DD`, para agrupar el historial. */
+export function formatSessionMonth(localDate: string): string {
+  const [year, month] = localDate.split('-').map(Number)
+  return MONTH_FORMAT.format(new Date(year!, month! - 1, 1))
+}

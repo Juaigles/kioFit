@@ -57,9 +57,19 @@ export function createSessionRepository(db: KioFitDb): SessionRepository {
         const finished = await db.sessions.where('status').equals('finished').toArray()
         finished.sort((a, b) => b.startedAt.localeCompare(a.startedAt))
         return Promise.all(finished.map(async (session) => {
-          const rows = await db.sessionExercises.where('sessionId').equals(session.id).primaryKeys()
-          const doneSetCount = await db.sets.where('sessionExerciseId').anyOf(rows).filter(set => set.done).count()
-          return { session, exerciseCount: rows.length, doneSetCount }
+          const rows = await db.sessionExercises.where('sessionId').equals(session.id).sortBy('position')
+          const ids = rows.map(row => row.id)
+          const sets = await db.sets.where('sessionExerciseId').anyOf(ids).toArray()
+          const catalog = await db.exercises.bulkGet(rows.map(row => row.exerciseId))
+          return {
+            session,
+            exerciseCount: rows.length,
+            doneSetCount: sets.filter(set => set.done).length,
+            exercises: rows.map((row, index) => ({
+              name: catalog[index]?.name ?? '',
+              setCount: sets.filter(set => set.sessionExerciseId === row.id).length,
+            })),
+          }
         }))
       })
     },

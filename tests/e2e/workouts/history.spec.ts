@@ -26,7 +26,6 @@ test('F-26 el historial lista las sesiones de la más reciente a la más antigua
   await finishSessionOn(page, '2026-06-02', '65', 1)
 
   await page.goto('/workouts')
-  await page.getByRole('link', { name: 'Historial' }).click()
 
   await expect(page.getByRole('heading', { name: 'Historial' })).toBeVisible()
   const items = page.getByRole('list', { name: 'Sesiones terminadas' }).getByRole('listitem')
@@ -41,10 +40,9 @@ test('F-26 el historial lista las sesiones de la más reciente a la más antigua
   await expect(items.nth(2)).toContainText('1 serie')
 })
 
-test('F-26 el historial vacío lo dice y se llega desde Entrenar', async ({ page }) => {
+test('F-26 el historial vacío lo dice y está en Entrenar', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('navigation', { name: 'Principal' }).getByRole('link', { name: 'Entrenar' }).click()
-  await page.getByRole('link', { name: 'Historial' }).click()
 
   await expect(page.getByRole('heading', { name: 'Historial' })).toBeVisible()
   await expect(page.getByText('Todavía no hay entrenamientos terminados')).toBeVisible()

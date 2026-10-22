@@ -18,7 +18,7 @@ async function finishBenchOn(page: Page, day: string, kg: string, reps: string) 
 }
 
 async function openLatestDetail(page: Page) {
-  await page.goto('/workouts/history')
+  await page.goto('/workouts')
   await page.getByRole('list', { name: 'Sesiones terminadas' }).getByRole('link').first().click()
   await expect(page.getByRole('heading', { name: 'Press de banca' })).toBeVisible()
 }
@@ -27,14 +27,15 @@ test('F-28 cancelar el borrado conserva la sesión', async ({ page }) => {
   await finishBenchOn(page, '2026-06-01', '60', '10')
   await openLatestDetail(page)
 
-  await page.getByRole('button', { name: 'Borrar entrenamiento' }).click()
+  await page.getByRole('button', { name: 'Opciones del entrenamiento' }).click()
+  await page.getByRole('dialog').getByRole('button', { name: 'Borrar entrenamiento' }).click()
   const confirm = page.getByRole('dialog').filter({ hasText: '¿Borrar el entrenamiento?' })
   await expect(confirm).toBeVisible()
   await confirm.getByRole('button', { name: 'Cancelar' }).click()
 
   await expect(confirm).toBeHidden()
   await expect(page.getByRole('heading', { name: 'Press de banca' })).toBeVisible()
-  await page.goto('/workouts/history')
+  await page.goto('/workouts')
   await expect(page.getByRole('list', { name: 'Sesiones terminadas' }).getByRole('listitem')).toHaveCount(1)
 })
 
@@ -43,11 +44,12 @@ test('F-28 borrar y confirmar la quita del historial y deja de ser la referencia
   await finishBenchOn(page, '2026-06-02', '70', '5')
   await openLatestDetail(page)
 
-  await page.getByRole('button', { name: 'Borrar entrenamiento' }).click()
+  await page.getByRole('button', { name: 'Opciones del entrenamiento' }).click()
+  await page.getByRole('dialog').getByRole('button', { name: 'Borrar entrenamiento' }).click()
   await page.getByRole('dialog').filter({ hasText: '¿Borrar el entrenamiento?' })
     .getByRole('button', { name: 'Sí, borrar' }).click()
 
-  await expect(page).toHaveURL(/\/workouts\/history\/?$/)
+  await expect(page).toHaveURL(/\/workouts\/?$/)
   const list = page.getByRole('list', { name: 'Sesiones terminadas' }).getByRole('listitem')
   await expect(list).toHaveCount(1)
 

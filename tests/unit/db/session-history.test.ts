@@ -68,6 +68,15 @@ describe('SessionRepository: historial y detalle', () => {
     expect(list.map(item => [item.exerciseCount, item.doneSetCount])).toEqual([[2, 4], [1, 2], [1, 1]])
   })
 
+  it('D-13 cada sesión del historial trae sus ejercicios, en orden, con su número de series', async () => {
+    const { sessions, finished } = await setup()
+    await finished(new Date(2026, 5, 3, 10), new Date(2026, 5, 3, 11), 3, true)
+
+    const [item] = await firstValue(sessions.watchHistory())
+
+    expect(item?.exercises).toEqual([{ name: 'Banca', setCount: 3 }, { name: 'Remo', setCount: 1 }])
+  })
+
   it('F-26 la sesión en curso no sale en el historial', async () => {
     const { sessions, finished } = await setup()
     await finished(new Date(2026, 5, 1, 10), new Date(2026, 5, 1, 11), 1)

@@ -20,7 +20,7 @@ async function finishBenchOn(page: Page, day: string) {
 }
 
 async function openDetail(page: Page) {
-  await page.goto('/workouts/history')
+  await page.goto('/workouts')
   await page.getByRole('list', { name: 'Sesiones terminadas' }).getByRole('link').first().click()
   await expect(page.getByRole('heading', { name: 'Press de banca' })).toBeVisible()
 }
@@ -57,7 +57,7 @@ test('F-27 cambiar un valor, añadir una serie y quitar otra se guarda y el hist
 test('F-27 en el detalle la referencia es la sesión terminada anterior, no la propia sesión', async ({ page }) => {
   await finishBenchOn(page, '2026-06-01')
   await finishBenchOn(page, '2026-06-02')
-  await page.goto('/workouts/history')
+  await page.goto('/workouts')
   // La más antigua es la última de la lista: sin sesión anterior, sus referencias son "—".
   await page.getByRole('list', { name: 'Sesiones terminadas' }).getByRole('link').last().click()
   const oldSets = page.getByRole('list', { name: 'Series de Press de banca' }).getByRole('listitem')

@@ -24,6 +24,8 @@ export interface SessionSummary {
   session: Session
   exerciseCount: number
   doneSetCount: number
+  /** Los ejercicios de la sesión, en orden, con su número de series (D-13). */
+  exercises: { name: string, setCount: number }[]
 }
 
 /** Una sesión terminada que contiene un ejercicio, con las series que hizo en ella. */
