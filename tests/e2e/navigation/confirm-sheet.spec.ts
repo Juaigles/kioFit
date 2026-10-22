@@ -34,7 +34,8 @@ test('D-11 quitar un ejercicio con series hechas usa la misma hoja', async ({ pa
   await startWithBench(page)
   await markFirstSet(page)
 
-  await page.getByRole('button', { name: 'Quitar Press de banca' }).click()
+  await page.getByRole('button', { name: 'Opciones de Press de banca' }).click()
+  await page.getByRole('dialog').getByRole('button', { name: 'Quitar ejercicio' }).click()
 
   const sheet = page.getByRole('dialog')
   await expect(sheet).toContainText('Tiene series hechas. ¿Quitar el ejercicio?')

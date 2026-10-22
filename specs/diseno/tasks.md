@@ -7,8 +7,8 @@ Cada tarea cabe en 60-90 min y ~300 líneas sin tests (ADR-0003). Una rama, un c
 | D01 | Tokens, tema claro y oscuro, y guardarraíl de colores | D-16, D-17 | `tests/unit/design/tokens.test.ts`, `tests/e2e/navigation/color-mode.spec.ts` | hecha ([#31](https://github.com/Juaigles/kioFit/pull/31)) |
 | D02 | Barra de pestañas, layouts y pantallas base | D-01, D-02 | `tests/unit/components/app-tab-bar.test.ts`, `tests/e2e/navigation/tabs.spec.ts` | hecha ([#32](https://github.com/Juaigles/kioFit/pull/32)) |
 | D03 | Hojas de acciones y de confirmación | D-11 | `tests/unit/components/app-sheets.test.ts`, `tests/e2e/navigation/confirm-sheet.spec.ts` | hecha ([#33](https://github.com/Juaigles/kioFit/pull/33)) |
-| D04 | Sesión a pantalla completa, resumen y "Continuar" | D-03, D-04, D-05 | `tests/unit/features/workouts/domain/summary.test.ts`, `tests/e2e/workouts/session-screen.spec.ts` | en revisión |
-| D05 | Tarjeta del ejercicio con menú en hoja | D-09 | `tests/e2e/workouts/exercise-menu.spec.ts` | pendiente |
+| D04 | Sesión a pantalla completa, resumen y "Continuar" | D-03, D-04, D-05 | `tests/unit/features/workouts/domain/summary.test.ts`, `tests/e2e/workouts/session-screen.spec.ts` | hecha ([#34](https://github.com/Juaigles/kioFit/pull/34)) |
+| D05 | Tarjeta del ejercicio con menú en hoja | D-09 | `tests/e2e/workouts/exercise-menu.spec.ts` | en revisión |
 | D06 | Tabla de series | D-06, D-07, D-08, D-10, D-18 | `tests/unit/features/workouts/components/set-table.test.ts`, `tests/e2e/workouts/set-table.spec.ts` | pendiente |
 | D07 | Añadir ejercicio en hoja | D-12 | `tests/e2e/workouts/picker-sheet.spec.ts` | pendiente |
 | D08 | Entrenar con historial y detalle | D-13 | `tests/e2e/workouts/train-history.spec.ts` | pendiente |
