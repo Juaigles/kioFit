@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import AppConfirmSheet from '../components/app/AppConfirmSheet.vue'
-import { useBackupExport } from '../features/backup/composables/useBackupExport'
-
-import { useBackupImport } from '../features/backup/composables/useBackupImport'
+import AppConfirmSheet from '../../../components/app/AppConfirmSheet.vue'
+import { useBackupExport } from '../composables/useBackupExport'
+import { useBackupImport } from '../composables/useBackupImport'
 
 const { label, exporting, error, exportBackup } = useBackupExport()
 const { state: importState, choose, cancel, confirm } = useBackupImport()
@@ -38,36 +37,24 @@ async function onFileChosen(event: Event) {
 </script>
 
 <template>
-  <UContainer class="space-y-4 py-8">
-    <h1 class="text-2xl font-bold">
-      Datos
-    </h1>
-    <p class="text-muted">
-      {{ label }}
-    </p>
-    <UAlert
-      v-if="error"
-      color="error"
-      variant="subtle"
-      :title="error"
-    />
-    <UButton
-      label="Exportar copia"
-      size="xl"
-      block
-      class="min-h-11"
-      :loading="exporting"
-      @click="exportBackup"
-    />
-    <UButton
-      label="Importar copia"
-      size="xl"
-      block
-      color="neutral"
-      variant="outline"
-      class="min-h-11"
-      @click="fileInput?.click()"
-    />
+  <AppScreen>
+    <AppPageHeader title="Ajustes" />
+    <AppSection title="Copia de seguridad">
+      <AppListGroup label="Copia de seguridad">
+        <AppListRow :label="label" />
+        <AppListRow
+          label="Exportar copia"
+          action
+          :loading="exporting"
+          @select="exportBackup"
+        />
+        <AppListRow
+          label="Importar copia"
+          action
+          @select="fileInput?.click()"
+        />
+      </AppListGroup>
+    </AppSection>
     <input
       ref="fileInput"
       type="file"
@@ -75,6 +62,12 @@ async function onFileChosen(event: Event) {
       class="hidden"
       @change="onFileChosen"
     >
+    <UAlert
+      v-if="error"
+      color="error"
+      variant="subtle"
+      :title="error"
+    />
     <UAlert
       v-if="importState.status === 'error'"
       color="error"
@@ -88,6 +81,14 @@ async function onFileChosen(event: Event) {
       title="Copia importada"
       description="Tus datos se han sustituido por los de la copia."
     />
+    <AppSection title="Acerca de">
+      <AppListGroup label="Acerca de">
+        <AppListRow
+          label="kioFit"
+          value="Tus datos viven solo en este dispositivo"
+        />
+      </AppListGroup>
+    </AppSection>
     <AppConfirmSheet
       v-model:open="confirming"
       title="Importar copia"
@@ -99,12 +100,5 @@ async function onFileChosen(event: Event) {
         Importar sustituye todos los datos actuales. No se puede deshacer.
       </p>
     </AppConfirmSheet>
-    <UButton
-      to="/"
-      label="Volver"
-      color="neutral"
-      variant="ghost"
-      class="min-h-11"
-    />
-  </UContainer>
+  </AppScreen>
 </template>

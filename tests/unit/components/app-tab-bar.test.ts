@@ -13,7 +13,7 @@ describe('AppTabBar', () => {
     const nav = wrapper.get('nav[aria-label="Principal"]')
     const links = nav.findAll('a')
     expect(links.map(link => link.text())).toEqual(['Hoy', 'Entrenar', 'Ajustes'])
-    expect(links.map(link => link.attributes('href'))).toEqual(['/', '/workouts', '/data'])
+    expect(links.map(link => link.attributes('href'))).toEqual(['/', '/workouts', '/settings'])
   })
 
   it('D-01 marca como actual solo la pestaña de la ruta abierta', async () => {

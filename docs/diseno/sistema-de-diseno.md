@@ -94,7 +94,8 @@ Lucide (el set por defecto de Nuxt UI), trazo 2, 20-24 px, empaquetados en la ap
 | `AppPageHeader` | Título grande de pestaña o barra de navegación con "atrás" y acciones | `title`, `back`, slot `actions` |
 | `AppTabBar` | Barra de pestañas inferior | `items` (etiqueta, icono, ruta) |
 | `AppSection` | Bloque con título de grupo en `caption` | `title`, slot |
-| `AppListGroup` / `AppListRow` | Lista agrupada estilo Ajustes de iOS | `label`, `value`, `to`, `tone` |
+| `AppListGroup` / `AppListRow` | Lista agrupada estilo Ajustes de iOS | `label`, `value`, `to`, `action`, `loading`, `tone` |
+| `AppNoticeLink` | Aviso de una línea que lleva a otra pantalla (copia antigua en Hoy) | `to`, `text` |
 | `AppStatTile` | Cifra con etiqueta | `label`, `value`, `unit` |
 | `AppActionSheet` | Hoja con una lista de acciones y "Cancelar" | `title`, `actions[]` (`label`, `icon`, `danger`, `disabled`) |
 | `AppConfirmSheet` | Hoja de confirmación de algo destructivo | `title`, `description`, `confirmLabel` |

@@ -108,4 +108,6 @@ export interface BackupRepository {
   exportData(): Promise<BackupData>
   /** Sustituye los datos de dominio por los de la copia y completa el catálogo con la semilla, todo o nada. No toca `meta`. */
   restore(data: BackupData): Promise<void>
+  /** Si hay al menos una sesión guardada, para decidir si avisar de que falta una copia (D-15). */
+  hasSessions(): Promise<boolean>
 }

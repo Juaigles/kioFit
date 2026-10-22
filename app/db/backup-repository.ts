@@ -5,6 +5,7 @@ import { addMissingCatalog } from './dexie-repositories'
 
 export function createBackupRepository(db: KioFitDb, seed: readonly SeedExercise[]): BackupRepository {
   return {
+    hasSessions: async () => (await db.sessions.count()) > 0,
     exportData: () => db.transaction('r', [db.exercises, db.sessions, db.sessionExercises, db.sets], async () => ({
       exercises: await db.exercises.toArray(),
       sessions: await db.sessions.toArray(),
