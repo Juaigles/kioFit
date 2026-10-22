@@ -13,12 +13,16 @@ test('F-14 añade una serie, quita otra y la numeración se actualiza', async ({
   await page.getByRole('button', { name: 'Añadir serie a Press de banca' }).click()
   await page.getByRole('button', { name: 'Añadir serie a Press de banca' }).click()
   await expect(sets).toHaveCount(3)
-  await expect(sets.getByText(/^Serie \d$/)).toHaveText(['Serie 1', 'Serie 2', 'Serie 3'])
+  // El número de serie es el botón que abre sus opciones (D-10).
+  const numbers = sets.getByRole('button', { name: /Opciones de la serie/ })
+  await expect(numbers).toHaveText(['1', '2', '3'])
 
-  await page.getByRole('button', { name: 'Quitar serie 2' }).click()
+  // Borrar una serie está en la hoja del número de serie (D-10).
+  await page.getByRole('button', { name: 'Opciones de la serie 2' }).click()
+  await page.getByRole('dialog').getByRole('button', { name: 'Borrar serie' }).click()
 
   await expect(sets).toHaveCount(2)
-  await expect(sets.getByText(/^Serie \d$/)).toHaveText(['Serie 1', 'Serie 2'])
+  await expect(numbers).toHaveText(['1', '2'])
 })
 
 test('marcar una serie como hecha con un toque la deja marcada y otro toque la desmarca', async ({ page }) => {
