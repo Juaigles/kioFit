@@ -3,8 +3,7 @@ import type { ExerciseHistoryEntry, SessionExerciseView } from '../../../types/r
 import type { SetValues } from '../../../types/workouts'
 import AppActionSheet, { type SheetAction } from '../../../components/app/AppActionSheet.vue'
 import AppConfirmSheet from '../../../components/app/AppConfirmSheet.vue'
-import { previousReference } from '../domain/previous'
-import SetRow from './SetRow.vue'
+import SetTable from './SetTable.vue'
 
 /** `before`: inicio de la sesión terminada que se corrige; la referencia sale de las anteriores a ella (F-27). */
 const props = defineProps<{ item: SessionExerciseView, history: readonly ExerciseHistoryEntry[], isFirst: boolean, isLast: boolean, before?: string }>()
@@ -90,22 +89,17 @@ function confirmRemove() {
       @confirm="confirmRemove"
     />
 
-    <ul
-      :aria-label="`Series de ${item.exercise.name}`"
-      class="space-y-1"
-    >
-      <SetRow
-        v-for="set in item.sets"
-        :key="set.id"
-        :set="set"
-        :measure="item.exercise.measure"
-        :reference="previousReference(history, set.position, item.exercise.measure, before)"
-        @update-values="emit('update-values', set.id, $event)"
-        @toggle="emit('toggle-set', set.id, !set.done)"
-        @complete="emit('complete-set', set.id, $event)"
-        @remove="emit('remove-set', set.id)"
-      />
-    </ul>
+    <SetTable
+      :exercise-name="item.exercise.name"
+      :measure="item.exercise.measure"
+      :sets="item.sets"
+      :history="history"
+      :before="before"
+      @update-values="(setId, values) => emit('update-values', setId, values)"
+      @toggle-set="(setId, done) => emit('toggle-set', setId, done)"
+      @complete-set="(setId, values) => emit('complete-set', setId, values)"
+      @remove-set="emit('remove-set', $event)"
+    />
     <UButton
       label="Añadir serie"
       :aria-label="`Añadir serie a ${item.exercise.name}`"

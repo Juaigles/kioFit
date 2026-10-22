@@ -25,7 +25,7 @@ test('F-12 añade dos ejercicios, cambia su orden y cada uno tiene una serie vac
   const cards = page.getByRole('listitem').filter({ has: page.getByRole('heading', { level: 2 }) })
   await expect(cards.getByRole('heading', { level: 2 })).toHaveText(['Press de banca', 'Press de banca inclinado'])
   await expect(page.getByRole('list', { name: /Series de/ })).toHaveCount(2)
-  await expect(page.getByRole('listitem').filter({ hasText: /^Serie 1/ })).toHaveCount(2)
+  await expect(page.getByRole('list', { name: /Series de/ }).getByRole('listitem')).toHaveCount(2)
 
   await chooseOption(page, 'Press de banca inclinado', 'Subir')
 

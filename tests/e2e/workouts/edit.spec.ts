@@ -33,7 +33,9 @@ test('F-27 cambiar un valor, añadir una serie y quitar otra se guarda y el hist
   await page.getByRole('textbox', { name: 'Reps serie 1' }).focus()
   await expect(page.getByRole('textbox', { name: 'Kg serie 1' })).toHaveValue('62,5')
 
-  await page.getByRole('button', { name: 'Quitar serie 2' }).click()
+  // Borrar una serie está en la hoja del número de serie (D-10).
+  await page.getByRole('button', { name: 'Opciones de la serie 2' }).click()
+  await page.getByRole('dialog').getByRole('button', { name: 'Borrar serie' }).click()
   await page.getByRole('button', { name: 'Añadir serie a Press de banca' }).click()
   await page.getByRole('button', { name: 'Añadir serie a Press de banca' }).click()
   const sets = page.getByRole('list', { name: 'Series de Press de banca' }).getByRole('listitem')

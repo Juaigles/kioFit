@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import { computed, ref, watch } from 'vue'
 import type { Measure, SetValues, WorkoutSet } from '../../../types/workouts'
+import AppActionSheet from '../../../components/app/AppActionSheet.vue'
+import { SET_GRID } from '../domain/columns'
 import { FIELDS_BY_MEASURE, resolveSetCompletion, type PreviousReference, type SetField } from '../domain/previous'
 import { formatDuration, formatReps, formatWeightKg, parseDurationSeconds, parseReps, parseWeightKg, type ParseResult } from '../domain/values'
 
-const props = defineProps<{ set: WorkoutSet, measure: Measure, reference: PreviousReference }>()
+const props = defineProps<{ set: WorkoutSet, measure: Measure, exerciseName: string, reference: PreviousReference }>()
 const emit = defineEmits<{
   'update-values': [values: SetValues]
   'toggle': []
@@ -31,6 +34,14 @@ const FIELDS: Record<FieldKey, FieldSpec> = {
 
 const fields = computed(() => FIELDS_BY_MEASURE[props.measure].map(key => FIELDS[key]))
 const number = computed(() => props.set.position + 1)
+
+/** Con el campo vacío, la referencia se ve como pista y no como valor guardado (D-07). */
+function hintOf(spec: FieldSpec): string {
+  const value = props.reference.values[spec.key]
+  return value === undefined ? spec.placeholder : spec.format(value)
+}
+
+const menuOpen = ref(false)
 
 function textOf(spec: FieldSpec): string {
   const value = props.set[spec.key]
@@ -112,50 +123,57 @@ function focusNext(event: KeyboardEvent) {
 </script>
 
 <template>
-  <li class="flex flex-wrap items-center gap-1">
-    <span class="w-16 shrink-0">Serie {{ number }}</span>
-    <span class="w-16 shrink-0 text-center text-muted"><span class="sr-only">Anterior: </span>{{ reference.text }}</span>
-    <div class="flex flex-1 gap-1">
-      <UInput
-        v-for="spec in fields"
-        :key="spec.key"
-        v-model="drafts[spec.key]"
-        type="text"
-        :inputmode="spec.inputmode"
-        enterkeyhint="next"
-        autocomplete="off"
-        data-set-field
-        :placeholder="spec.placeholder"
-        :aria-label="`${spec.label} serie ${number}${spec.key === 'durationSeconds' ? ' (mm:ss)' : ''}`"
-        :aria-invalid="invalid[spec.key] || missing.includes(spec.key)"
-        :color="invalid[spec.key] || missing.includes(spec.key) ? 'error' : 'neutral'"
-        class="min-w-0 flex-1"
-        :ui="{ base: 'min-h-11 text-center' }"
-        @blur="commit(spec)"
-        @keydown.enter.prevent="commit(spec); focusNext($event)"
-      />
-    </div>
+  <li
+    class="grid items-center gap-1 rounded-lg px-1 py-0.5"
+    :class="[SET_GRID[measure], set.done ? 'bg-done-tint' : '']"
+  >
     <UButton
-      :label="set.done ? '✓' : '○'"
-      :color="set.done ? 'success' : 'neutral'"
-      variant="ghost"
-      class="min-h-11 min-w-11 justify-center"
-      :aria-label="set.done ? `Desmarcar serie ${number}` : `Marcar serie ${number} como hecha`"
-      :aria-pressed="set.done"
-      @click="toggle"
-    />
-    <UButton
-      label="✕"
+      :label="String(number)"
+      :aria-label="`Opciones de la serie ${number}`"
       color="neutral"
       variant="ghost"
       class="min-h-11 min-w-11 justify-center"
-      :aria-label="`Quitar serie ${number}`"
-      @click="emit('remove')"
+      @click="menuOpen = true"
+    />
+    <span class="text-center text-sm text-muted"><span class="sr-only">Anterior: </span>{{ reference.text }}</span>
+    <UInput
+      v-for="spec in fields"
+      :key="spec.key"
+      v-model="drafts[spec.key]"
+      type="text"
+      :inputmode="spec.inputmode"
+      enterkeyhint="next"
+      autocomplete="off"
+      data-set-field
+      :placeholder="hintOf(spec)"
+      :aria-label="`${spec.label} serie ${number}${spec.key === 'durationSeconds' ? ' (mm:ss)' : ''}`"
+      :aria-invalid="invalid[spec.key] || missing.includes(spec.key)"
+      :color="invalid[spec.key] || missing.includes(spec.key) ? 'error' : 'neutral'"
+      class="min-w-0"
+      :ui="{ base: 'min-h-11 text-center' }"
+      @blur="commit(spec)"
+      @keydown.enter.prevent="commit(spec); focusNext($event)"
+    />
+    <UButton
+      :icon="set.done ? 'i-lucide-check' : 'i-lucide-circle'"
+      color="neutral"
+      variant="ghost"
+      class="min-h-11 min-w-11 justify-center"
+      :class="set.done ? 'text-done' : 'text-muted'"
+      :aria-label="set.done ? `Desmarcar serie ${number} de ${exerciseName}` : `Marcar serie ${number} como hecha`"
+      :aria-pressed="set.done"
+      @click="toggle"
+    />
+    <AppActionSheet
+      v-model:open="menuOpen"
+      :title="`Serie ${number}`"
+      :actions="[{ id: 'remove', label: 'Borrar serie', icon: 'i-lucide-trash-2', danger: true }]"
+      @select="emit('remove')"
     />
     <p
       v-if="missingMessage"
       role="alert"
-      class="w-full text-sm text-error"
+      class="col-span-full text-sm text-error"
     >
       {{ missingMessage }}
     </p>
@@ -163,7 +181,7 @@ function focusNext(event: KeyboardEvent) {
       v-for="spec in fields.filter(f => invalid[f.key])"
       :key="spec.key"
       role="alert"
-      class="w-full text-sm text-error"
+      class="col-span-full text-sm text-error"
     >
       {{ spec.error }}
     </p>
