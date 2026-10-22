@@ -3,7 +3,7 @@ import { computed, ref, watch } from 'vue'
 import AppConfirmSheet from '../../../components/app/AppConfirmSheet.vue'
 import { useNow } from '../../../composables/useNow'
 import ExerciseCard from '../components/ExerciseCard.vue'
-import ExercisePicker from '../components/ExercisePicker.vue'
+import ExercisePickerSheet from '../components/ExercisePickerSheet.vue'
 import { useActiveSession } from '../composables/useActiveSession'
 import { useExerciseHistories } from '../composables/useExerciseHistories'
 import { formatVolume, sessionSummary } from '../domain/summary'
@@ -101,18 +101,16 @@ async function addExercise(exerciseId: string) {
         @complete-set="completeSet"
       />
     </ul>
-    <ExercisePicker
-      v-if="picking"
-      @pick="addExercise"
-      @cancel="picking = false"
-    />
     <UButton
-      v-else
       label="Añadir ejercicio"
       size="xl"
       block
       class="min-h-11"
       @click="picking = true"
+    />
+    <ExercisePickerSheet
+      v-model:open="picking"
+      @pick="addExercise"
     />
     <UButton
       label="Descartar entrenamiento"

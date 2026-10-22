@@ -34,7 +34,7 @@ test('F-04 crear un ejercicio propio desde una búsqueda sin resultados lo añad
 
   await page.getByRole('searchbox', { name: 'Buscar ejercicio' }).fill('Zancadas búlgaras con mancuerna')
   await expect(page.getByText('Sin resultados')).toBeVisible()
-  await page.getByRole('button', { name: 'Crear ejercicio propio' }).click()
+  await page.getByRole('button', { name: /^Crear ejercicio «/ }).click()
   await page.getByRole('radio', { name: 'Peso y repeticiones' }).click()
   await page.getByRole('button', { name: 'Crear y añadir' }).click()
 
@@ -52,7 +52,7 @@ test('F-04 muestra el motivo si el nombre del ejercicio propio es demasiado larg
   await page.getByRole('button', { name: 'Empezar entrenamiento' }).click()
   await page.getByRole('button', { name: 'Añadir ejercicio' }).click()
   await page.getByRole('searchbox', { name: 'Buscar ejercicio' }).fill('x'.repeat(61))
-  await page.getByRole('button', { name: 'Crear ejercicio propio' }).click()
+  await page.getByRole('button', { name: /^Crear ejercicio «/ }).click()
   await page.getByRole('button', { name: 'Crear y añadir' }).click()
 
   await expect(page.getByText('El nombre no puede pasar de 60 caracteres.')).toBeVisible()
