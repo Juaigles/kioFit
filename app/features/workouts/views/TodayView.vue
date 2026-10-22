@@ -19,6 +19,7 @@ async function startWorkout() {
 <template>
   <AppScreen>
     <AppPageHeader title="Hoy" />
+    <slot />
     <template v-if="active !== undefined">
       <ContinueSessionCard
         v-if="summary"

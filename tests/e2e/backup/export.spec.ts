@@ -48,7 +48,7 @@ test('C-02 exportar comparte kiofit-copia-<fecha>.json con la sesión terminada 
 
   await page.goto('/')
   await page.getByRole('navigation', { name: 'Principal' }).getByRole('link', { name: 'Ajustes' }).click()
-  await expect(page.getByRole('heading', { name: 'Datos' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Ajustes', level: 1 })).toBeVisible()
   await expect(page.getByText('Todavía no has hecho ninguna copia')).toBeVisible()
   await page.getByRole('button', { name: 'Exportar copia' }).click()
 
@@ -66,7 +66,7 @@ test('C-02 exportar comparte kiofit-copia-<fecha>.json con la sesión terminada 
 test('C-06 sin compartir archivos, exportar descarga el archivo', async ({ page }) => {
   await page.addInitScript(NO_SHARE_STUB)
   await finishBenchSession(page)
-  await page.goto('/data')
+  await page.goto('/settings')
 
   const downloadPromise = page.waitForEvent('download')
   await page.getByRole('button', { name: 'Exportar copia' }).click()
@@ -78,7 +78,7 @@ test('C-06 sin compartir archivos, exportar descarga el archivo', async ({ page 
 
 test('C-05 sin red se puede exportar compartiendo', async ({ page }) => {
   await page.addInitScript(SHARE_STUB)
-  await page.goto('/data')
+  await page.goto('/settings')
   await expect(page.getByRole('button', { name: 'Exportar copia' })).toBeVisible()
   await goOffline(page)
   await page.reload()
@@ -90,7 +90,7 @@ test('C-05 sin red se puede exportar compartiendo', async ({ page }) => {
 
 test('C-05 sin red se puede exportar descargando', async ({ page }) => {
   await page.addInitScript(NO_SHARE_STUB)
-  await page.goto('/data')
+  await page.goto('/settings')
   await expect(page.getByRole('button', { name: 'Exportar copia' })).toBeVisible()
   await goOffline(page)
   await page.reload()

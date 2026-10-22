@@ -38,9 +38,9 @@ async function finishSession(page: Page) {
   await expect(page.getByRole('button', { name: 'Empezar entrenamiento' })).toBeVisible()
 }
 
-/** Exporta desde /data por descarga y devuelve el contenido del archivo. */
+/** Exporta desde /settings por descarga y devuelve el contenido del archivo. */
 async function exportFile(page: Page): Promise<{ name: string, mimeType: string, buffer: Buffer }> {
-  await page.goto('/data')
+  await page.goto('/settings')
   const downloadPromise = page.waitForEvent('download')
   await page.getByRole('button', { name: 'Exportar copia' }).click()
   const download = await downloadPromise
@@ -69,7 +69,7 @@ test('C-10 elegir un archivo muestra el resumen y el aviso; cancelar no cambia n
   const other = await freshPage(browser, baseURL)
   await other.page.goto('/workouts')
   await addBench(other.page, '10', '5')
-  await other.page.goto('/data')
+  await other.page.goto('/settings')
   await fileInput(other.page).setInputFiles(file)
 
   const dialog = other.page.getByRole('dialog')
@@ -89,7 +89,7 @@ test('C-10 elegir un archivo muestra el resumen y el aviso; cancelar no cambia n
   await expect(other.page.getByRole('list', { name: 'Series de Press de banca' }).getByRole('listitem').first()).toContainText('10 × 5')
 
   // Se puede elegir el mismo archivo otra vez y confirmar.
-  await other.page.goto('/data')
+  await other.page.goto('/settings')
   await fileInput(other.page).setInputFiles(file)
   await other.page.getByRole('dialog').getByRole('button', { name: 'Importar' }).click()
   await expect(other.page.getByText('Copia importada')).toBeVisible()
@@ -109,7 +109,7 @@ test('C-11 tras borrar los datos del navegador, importar la copia devuelve la re
   const file = await exportFile(page)
 
   const fresh = await freshPage(browser, baseURL)
-  await fresh.page.goto('/data')
+  await fresh.page.goto('/settings')
   await fileInput(fresh.page).setInputFiles(file)
   await fresh.page.getByRole('dialog').getByRole('button', { name: 'Importar' }).click()
   await expect(fresh.page.getByText('Copia importada')).toBeVisible()
@@ -132,7 +132,7 @@ test('C-14 sin red se puede importar una copia válida', async ({ page, browser,
   const file = await exportFile(page)
 
   const fresh = await freshPage(browser, baseURL)
-  await fresh.page.goto('/data')
+  await fresh.page.goto('/settings')
   await expect(fresh.page.getByRole('button', { name: 'Importar copia' })).toBeVisible()
   await fresh.page.evaluate(async () => {
     await navigator.serviceWorker.ready
@@ -148,7 +148,7 @@ test('C-14 sin red se puede importar una copia válida', async ({ page, browser,
 })
 
 test('un archivo que no es una copia se rechaza con un aviso visible', async ({ page }) => {
-  await page.goto('/data')
+  await page.goto('/settings')
   await fileInput(page).setInputFiles({ name: 'notas.json', mimeType: 'application/json', buffer: Buffer.from('{"hola":1}') })
   await expect(page.getByText('Este archivo no es una copia de kioFit')).toBeVisible()
   await expect(page.getByRole('dialog')).toBeHidden()
